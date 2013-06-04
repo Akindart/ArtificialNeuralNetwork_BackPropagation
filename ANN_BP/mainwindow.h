@@ -2,12 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QFileSystemModel>
-#include <QTreeView>
-#include <QSplitterHandle>
-#include <QFile>
 #include <QFileDialog>
 #include <QDebug>
+#include <QMessageBox>
+#include <QProgressDialog>
+#include <QAbstractTableModel>
+#include <QLabel>
+#include <QFont>
 
 
 namespace Ui {
@@ -32,6 +33,11 @@ private:
 
     QFile *traningFile;
     QFile *testFile;
+
+    void fileParse(QString fn);
+
+signals:
+    void tableUpdated();
 
 };
 
