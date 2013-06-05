@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2013-06-05T09:48:39
+# Project created by QtCreator 2013-06-03T14:46:52
 #
 #-------------------------------------------------
 
@@ -13,8 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    ann_bp.cpp \
+    neuron.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    ann_bp.h \
+    neuron.h
 
 FORMS    += mainwindow.ui
