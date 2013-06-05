@@ -1,10 +1,18 @@
 #ifndef NEURON_H
 #define NEURON_H
 
-class neuron
+#include <QObject>
+
+class Neuron : public QObject
 {
+    Q_OBJECT
 public:
-    neuron();
+    explicit Neuron(QObject *parent = 0);
+
+signals:
+
+public slots:
+
 };
 
 #endif // NEURON_H

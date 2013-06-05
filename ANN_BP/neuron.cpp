@@ -1,5 +1,6 @@
 #include "neuron.h"
 
-neuron::neuron()
+Neuron::Neuron(QObject *parent) :
+    QObject(parent)
 {
 }
