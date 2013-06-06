@@ -9,6 +9,7 @@
 #include <QAbstractTableModel>
 #include <QLabel>
 #include <QFont>
+#include <QHash>
 
 
 namespace Ui {
@@ -34,7 +35,7 @@ private:
     QFile *traningFile;
     QFile *testFile;
 
-    void fileParse(QString fn);
+    QHash<int, QList<double> > *fileParse(QString fn);
 
 signals:
     void tableUpdated();

@@ -24,7 +24,17 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
                                                      "",
                                                      "CSV (*.csv);; TXT (*.txt)");
 
-    fileParse(file_name);
+    QHash<int, QList<double> > *tempList = fileParse(file_name);
+
+    // How to iterate over the hash
+    /**
+    QHashIterator<int, QList<double> > i(*tempList);
+     while (i.hasNext()) {
+         i.next();
+         qDebug() << i.key() << ": " << i.value();
+     }
+     **/
+
     this->traningFile = new QFile(file_name);
 
 }
@@ -38,8 +48,10 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 
 }
 
-void MainWindow::fileParse(QString fn)
+QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
 {
+    QHash<int, QList<double> > *tempList = new QHash<int, QList<double> >();
+
     ui->statusBar->showMessage(fn);
 
     QFile file(fn);
@@ -47,7 +59,7 @@ void MainWindow::fileParse(QString fn)
         QMessageBox::critical(this, "Erro",
                               "Ocorreu um erro ao abrir o arquivo",
                               QMessageBox::Ok);
-        return;
+        //return;
     }
 
     QLabel *label = new QLabel("Processando. . .", this,  Qt::ToolTip);
@@ -70,11 +82,20 @@ void MainWindow::fileParse(QString fn)
         int col = 0;
         int row = ui->tableWidget->rowCount();
 
+        QList<double> list_double;
+
         ui->tableWidget->insertRow(row);
         foreach (QString s, line_splited) {
+            // add the line to table
             QTableWidgetItem *item = new QTableWidgetItem(s);
             ui->tableWidget->setItem(row, col++, item);
+
+            list_double.append(s.toDouble());
+
         }
+
+        // put the numbers on hash
+        tempList->insert(row, list_double);
     }
 
     emit tableUpdated();
@@ -93,4 +114,6 @@ void MainWindow::fileParse(QString fn)
                              fi.completeSuffix() +
                              "\" foi carregado!",
                              QMessageBox::Ok);
+
+    return tempList;
 }
