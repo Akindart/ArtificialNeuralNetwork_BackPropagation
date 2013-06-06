@@ -55,6 +55,26 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 void ANN_BP::exeANNBP(QList<double> inputValues)
 {
 
+    int iterator = (inputValues.size()-1);
+
+    for(int i=0; i<iterator; i++){
+
+        this->getInputLayer()->at(i)->setOutput(inputValues.at(i));
+
+    }
+
+    for(int i=0; i<iterator; i++){
+
+        this->getHiddenLayer()->at(i)->calcOutputValue(this->getInputLayer());
+
+    }
+
+    for(int i=0; i<iterator; i++){
+
+        this->getOutputLayer()->at(i)->calcOutputValue(this->getHiddenLayer());
+
+    }
+
 
 
 }
@@ -85,5 +105,26 @@ double ANN_BP::getN()
 {
 
     return this->N;
+
+}
+
+QList<Neuron *> *ANN_BP::getInputLayer()
+{
+
+    return this->inputLayer;
+
+}
+
+QList<Neuron *> *ANN_BP::getHiddenLayer()
+{
+
+    return this->hiddenLayer;
+
+}
+
+QList<Neuron *> *ANN_BP::getOutputLayer()
+{
+
+    return this->outputLayer;
 
 }

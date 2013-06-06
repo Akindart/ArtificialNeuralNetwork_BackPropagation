@@ -36,6 +36,7 @@ private:
     QFile *testFile;
 
     QHash<int, QList<double> > *fileParse(QString fn);
+    QHash<int, QList<double> > *tempList;
 
 signals:
     void tableUpdated();

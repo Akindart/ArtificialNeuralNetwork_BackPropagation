@@ -24,7 +24,7 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
                                                      "",
                                                      "CSV (*.csv);; TXT (*.txt)");
 
-    QHash<int, QList<double> > *tempList = fileParse(file_name);
+    this->tempList = fileParse(file_name);
 
     // How to iterate over the hash
     /**
@@ -35,16 +35,16 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
      }
      **/
 
-    this->traningFile = new QFile(file_name);
+    //this->traningFile = new QFile(file_name);
 
 }
 
 void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 {
 
-    QString testFileName = QFileDialog::getOpenFileName(this, tr("Arquivo de Teste"), "/home/spades", "Text files (*.txt)");
+    QString testFileName = QFileDialog::getOpenFileName(this, tr("Arquivo de Teste"), "", "Text files (*.txt)");
 
-    this->testFile = new QFile(testFileName);
+    //this->testFile = new QFile(testFileName);
 
 }
 
