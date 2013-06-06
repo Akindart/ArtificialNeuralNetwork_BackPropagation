@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-
 #include <cmath>
+
 
 class Neuron : public QObject
 {
@@ -22,8 +22,8 @@ public:
     void setWeights(QList<double> *weights);
     void setValues(QList<double> *values);
     void calcErrorOutputLayer(double expectedOutput);
-    void calcErrorHiddenLayer(QList<Neuron *> *Neurons);
-
+    void calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons);
+    void calcNewWeight(double N, QList<Neuron *> Neurons);
 
     int getId();
     double getNet();
@@ -49,6 +49,8 @@ private:
 
     bool logistica;
     bool tangHiperbolica;
+
+
 
     QList<double> *weights;
     QList<double> *values;

@@ -54,7 +54,7 @@ void Neuron::calcErrorOutputLayer(double expectedOutput)
 
 }
 
-void Neuron::calcErrorHiddenLayer(QList<Neuron *> *Neurons)
+void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons)
 {
 
     double deriv;
@@ -66,13 +66,27 @@ void Neuron::calcErrorHiddenLayer(QList<Neuron *> *Neurons)
     else if(this->tangHiperbolica) deriv = this->calcDerivTangHiperbolic(this->getNet());
 
 
-    foreach(Neuron *tempNeuron, *Neurons){
+    for(int i=0; i<qtyInputLayer; i++){
 
-        tempSum += (tempNeuron->getError()*this->output);
+        tempSum += (Neurons->at(i)->getError()*this->getWeights()->at(i));
 
     }
 
     this->setError(tempSum*deriv);
+
+}
+
+void Neuron::calcNewWeight(double N, QList<Neuron *> Neurons)
+{
+
+
+    for(int i=0; i<this->getWeights()->size(); i++){
+
+        this->getWeights()->insert(i, N*this->getError()*(Neurons.at(i)->getOutput()));
+        this->getWeights()->removeAt(i+1);
+
+    }
+
 
 }
 
@@ -90,7 +104,6 @@ void Neuron::calcNet(QList<Neuron *> *Neurons)
     this->setNet(tempSum);
 
 }
-
 
 void Neuron::setError(double error)
 {

@@ -52,6 +52,13 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
 }
 
+void ANN_BP::exeANNBP(QList<double> inputValues)
+{
+
+
+
+}
+
 
 double ANN_BP::randomDoubleNumber()
 {
@@ -63,5 +70,20 @@ double ANN_BP::randomDoubleNumber()
     double a_random_double = unif(re);
 
     return a_random_double;
+
+}
+
+
+void ANN_BP::setN(double N)
+{
+
+    this->N = N;
+
+}
+
+double ANN_BP::getN()
+{
+
+    return this->N;
 
 }
