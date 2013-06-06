@@ -1,8 +1,24 @@
 #include "neuron.h"
 
-Neuron::Neuron(QObject *parent) :
+
+Neuron::Neuron(QObject *parent):
     QObject(parent)
 {
+
+
+
+}
+
+void Neuron::calcOutputValue(QList<Neuron *> *Neurons)
+{
+
+    this->calcNet(Neurons);
+
+    if(this->logistica)
+        this->setOutput(this->calcLogistic(this->getNet()));
+    else if(this->tangHiperbolica) this->setOutput(this->calcTangHiperbolic(this->getNet()));
+
+
 }
 
 double Neuron::calcTangHiperbolic(double n)
@@ -24,3 +40,134 @@ double Neuron::calcDerivLogistic(double n)
 {
     return ( exp(-n) / ((1 + exp(-n)) * (1 + exp(-n))) );
 }
+
+void Neuron::calcErrorOutputLayer(double expectedOutput)
+{
+    double deriv;
+
+    if(this->logistica)
+        deriv = this->calcDerivLogistic(this->getNet());
+
+    else if(this->tangHiperbolica) deriv = this->calcDerivTangHiperbolic(this->getNet());
+
+    this->setError(deriv*(expectedOutput - this->getOutput()));
+
+}
+
+void Neuron::calcErrorHiddenLayer(QList<Neuron *> *Neurons)
+{
+
+    double deriv;
+    double tempSum = 0.0;
+
+    if(this->logistica)
+        deriv = this->calcDerivLogistic(this->getNet());
+
+    else if(this->tangHiperbolica) deriv = this->calcDerivTangHiperbolic(this->getNet());
+
+
+    foreach(Neuron *tempNeuron, *Neurons){
+
+        tempSum += (tempNeuron->getError()*this->output);
+
+    }
+
+    this->setError(tempSum*deriv);
+
+}
+
+void Neuron::calcNet(QList<Neuron *> *Neurons)
+{
+
+    double tempSum = 0.0;
+
+    for(int i=0; i<Neurons->size(); i++){
+
+        tempSum += (Neurons->at(i)->getOutput()*this->getWeights()->at(i));
+
+    }
+
+    this->setNet(tempSum);
+
+}
+
+void Neuron::setError(double error)
+{
+
+    this->error = error;
+
+}
+
+double Neuron::getError()
+{
+
+    return this->error;
+
+}
+
+double Neuron::getOutput()
+{
+
+    return this->output;
+
+}
+
+QList<double> *Neuron::getWeights()
+{
+    return this->weights;
+}
+
+QList<double> *Neuron::getValues()
+{
+    return this->values;
+
+}
+
+void Neuron::setNet(double net)
+{
+
+    this->net = net;
+
+}
+
+double Neuron::getNet()
+{
+
+    return this->net;
+
+}
+
+int Neuron::getId()
+{
+
+    return this->id;
+
+}
+
+void Neuron::setId(int id)
+{
+
+    this->id = id;
+
+}
+
+void Neuron::setOutput(double output)
+{
+
+    this->output = output;
+
+}
+
+void Neuron::setWeights(QList<double> *weights)
+{
+
+    this->weights = weights;
+}
+
+void Neuron::setValues(QList<double> *values)
+{
+
+    this->values = values;
+
+}
+

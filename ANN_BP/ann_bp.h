@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <neuron.h>
+#include <QList>
+#include <QString>
 
 class ANN_BP : public QObject
 {
@@ -11,6 +13,8 @@ public:
     explicit ANN_BP(QObject *parent = 0);
 
     explicit ANN_BP(QObject *parent = 0, int qtyInputLayer = 1, int qtyHiddenLayer = 1, int qtyOutputLayer = 1);
+
+    void exeANNBP(QString input); //executa para frente e faz o BP uma vez
 
     void setInputLayer(QList<Neuron>  *inputLayer = new QList<Neuron>);
     void setHiddenLayer(QList<Neuron> *hiddenLayer = new QList<Neuron>);
@@ -23,8 +27,8 @@ public:
 
 private:
 
-    QList<Neuron> *inputLayer;
-    QList<Neuron> *hiddenLayer;
+    QList<Neuron *> *inputLayer;
+    QList<Neuron *> *hiddenLayer;
     QList<Neuron> *outputLayer;
 
 signals:

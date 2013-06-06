@@ -2,8 +2,8 @@
 #define NEURON_H
 
 #include <QObject>
-#include <QStringList>
-
+#include <QList>
+#include <QString>
 
 #include <cmath>
 
@@ -13,25 +13,46 @@ class Neuron : public QObject
 public:
     explicit Neuron(QObject *parent = 0);
 
+    void calcOutputValue(QList<Neuron *> *Neurons);
+
     void setError(double error);
-    void setOutputInformation(QString *outputInformation = new QString());
-    void setInputInformation(QStringList *inputInformation = new QStringList());
+    void setNet(double net);
+    void setId(int id);
+    void setOutput(double output);
+    void setWeights(QList<double> *weights);
+    void setValues(QList<double> *values);
+    void calcErrorOutputLayer(double expectedOutput);
+    void calcErrorHiddenLayer(QList<Neuron *> *Neurons);
 
+
+    int getId();
+    double getNet();
     double getError();
-    QString *getOutputInformation();
-    QStringList *getInputInformation();
-
+    double getOutput();
+    QList<double> *getWeights();
+    QList<double> *getValues();
 
 private:
     double calcTangHiperbolic(double n);
     double calcDerivTangHiperbolic(double n);
     double calcLogistic(double n);
     double calcDerivLogistic(double n);
+    void calcNet(QList<Neuron *> *Neurons);
 
     double error;
+    double net;
+    double output;
 
-    QString *outputInformation; //neuronOrigin:valueOutput:destinyLayer
-    QStringList *inputInformation;  //inputNumber:neurinOrigin:weight:value
+    int id;
+
+    bool logistica;
+    bool tangHiperbolica;
+
+    QList<double> *weights;
+    QList<double> *values;
+
+
+
 
 signals:
 
