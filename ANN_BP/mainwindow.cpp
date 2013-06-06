@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->tempList = new QHash<int, QList<double> >();
 
+    qtyInput = qtyHidden = qtyOutput = 0;
+
     connect(this, SIGNAL(tableUpdated()),
             ui->tableWidget, SLOT(resizeColumnsToContents()));
 }
@@ -36,9 +38,6 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
          qDebug() << i.key() << ": " << i.value();
      }
      **/
-
-    //this->traningFile = new QFile(file_name);
-
 }
 
 void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
@@ -108,6 +107,8 @@ void MainWindow::fileParse(QString fn)
                              fi.completeSuffix() +
                              "\" foi carregado!",
                              QMessageBox::Ok);
+
+    calcLayers();
 }
 
 void MainWindow::normalize(int key, QStringList l)
@@ -126,8 +127,6 @@ void MainWindow::normalize(int key, QStringList l)
 
     qSort(list_double.begin(), list_double.end());
 
-    qDebug() << list_double << "  " << list_double.first() << " " << list_double.last();
-
     double line_min = list_double.first();
     double line_max = list_double.last();
 
@@ -143,4 +142,35 @@ void MainWindow::normalize(int key, QStringList l)
 
     qDebug() << list_temp;
     tempList->insert(key, list_temp);
+}
+
+void MainWindow::updateTableNormalized()
+{
+
+}
+
+void MainWindow::calcLayers()
+{
+    QList<double> l_class;
+
+    // Input Layer, amount of Neurons is the amount of COLs
+    qtyHidden = qtyInput = tempList->value(1).length() -1;
+
+    QHashIterator<int, QList<double> > i(*tempList);
+    while (i.hasNext()) {
+        i.next();
+
+        // get last element of line. It means the CLASS
+        double last_element = i.value().last();
+
+        if (!l_class.contains(last_element))
+            l_class.append(last_element);
+    }
+
+     // Output Layer, amount of Neuros is th amount of CLASSes
+     qtyOutput = l_class.length();
+
+     ui->lblInputLayer->setText(QString("<html>Input: <b>" + QString::number(qtyInput) + "</b></html>"));
+     ui->lblOutputLayer->setText(QString("<html>Output: <b>" + QString::number(qtyOutput) + "</b></html>"));
+     ui->edtHiddenLayer->setText(QString::number(qtyHidden));
 }

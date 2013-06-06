@@ -35,13 +35,14 @@ private:
     QFile *traningFile;
     QFile *testFile;
     QHash<int, QList<double> > *tempList;
-
-    void fileParse(QString fn);
-    void normalize(int key, QStringList l);
-
     int qtyInput;
     int qtyHidden;
     int qtyOutput;
+
+    void fileParse(QString fn);
+    void normalize(int key, QStringList l);
+    void updateTableNormalized();
+    void calcLayers();
 
 
 signals:
