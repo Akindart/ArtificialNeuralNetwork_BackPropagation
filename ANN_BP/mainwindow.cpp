@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->tempList = new QHash<int, QList<double> >();
+
     connect(this, SIGNAL(tableUpdated()),
             ui->tableWidget, SLOT(resizeColumnsToContents()));
 }
@@ -24,7 +26,7 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
                                                      "",
                                                      "CSV (*.csv);; TXT (*.txt)");
 
-    this->tempList = fileParse(file_name);
+    fileParse(file_name);
 
     // How to iterate over the hash
     /**
@@ -48,7 +50,7 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 
 }
 
-QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
+void MainWindow::fileParse(QString fn)
 {
     ui->statusBar->showMessage(fn);
 
@@ -80,24 +82,14 @@ QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
         int col = 0;
         int row = ui->tableWidget->rowCount();
 
-        normalize(line_splited);
-
-        QList<double> list_double;
+        normalize(row, line_splited);
 
         ui->tableWidget->insertRow(row);
         foreach (QString s, line_splited) {
             // add the line to table
             QTableWidgetItem *item = new QTableWidgetItem(s);
             ui->tableWidget->setItem(row, col++, item);
-
-            list_double.append(s.toDouble());
-
         }
-
-        //normalize(row, list_double);
-        // put the numbers on hash
-        //QHash<int, QList<double> > *tempList;
-        tempList->insert(row, list_double);
     }
 
     emit tableUpdated();
@@ -116,18 +108,17 @@ QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
                              fi.completeSuffix() +
                              "\" foi carregado!",
                              QMessageBox::Ok);
-
-    return tempList;
 }
 
-double MainWindow::normalize(QStringList &l)
+void MainWindow::normalize(int key, QStringList l)
 {
     /**
-        X1,X2,X3,X4,X5,X6,classe
-        1,19,35,28,17,4,1
+        X1, X2, X3, X4, X5, X6, classe
+        1,  19, 35, 28, 17, 4,  1
     **/
 
     QList<double> list_double;
+    QList<double> list_temp;
 
     // Min - Max of Line (l)
     for (int i = 0; i < l.size() - 1; i++)
@@ -141,21 +132,15 @@ double MainWindow::normalize(QStringList &l)
     double line_max = list_double.last();
 
     // Update all of them...
-    QStringList *l_new = new QStringList();
     for (int i = 0; i < l.size() - 1; i++) {
         double v = l.at(i).toDouble();
         double v_new = (v - line_min) / (line_max - line_min);
-
-        //l_new->append(QString(v_new));
+        list_temp.append(v_new);
     }
 
-    //l = l_new;
+    // Last element is the CLASS
+    list_temp.append(l.last().toDouble());
 
-
-
-
-
-
-
-    return 0;
+    qDebug() << list_temp;
+    tempList->insert(key, list_temp);
 }

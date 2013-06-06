@@ -36,8 +36,8 @@ private:
     QFile *testFile;
     QHash<int, QList<double> > *tempList;
 
-    QHash<int, QList<double> > *fileParse(QString fn);
-    double normalize(QStringList &l);
+    void fileParse(QString fn);
+    void normalize(int key, QStringList l);
 
     int qtyInput;
     int qtyHidden;
