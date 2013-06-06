@@ -23,7 +23,7 @@ public:
     void setValues(QList<double> *values);
     void calcErrorOutputLayer(double expectedOutput);
     void calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons);
-    void calcNewWeight(double N, QList<Neuron *> Neurons);
+    void calcNewWeight(double N, QList<Neuron *> *Neurons);
 
     int getId();
     double getNet();

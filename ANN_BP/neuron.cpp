@@ -76,13 +76,13 @@ void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons)
 
 }
 
-void Neuron::calcNewWeight(double N, QList<Neuron *> Neurons)
+void Neuron::calcNewWeight(double N, QList<Neuron *> *Neurons)
 {
 
 
     for(int i=0; i<this->getWeights()->size(); i++){
 
-        this->getWeights()->insert(i, N*this->getError()*(Neurons.at(i)->getOutput()));
+        this->getWeights()->insert(i, N*this->getError()*(Neurons->at(i)->getOutput()));
         this->getWeights()->removeAt(i+1);
 
     }

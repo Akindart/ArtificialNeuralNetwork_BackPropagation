@@ -15,7 +15,7 @@ public:
 
     explicit ANN_BP(QObject *parent = 0, int qtyInputLayer = 1, int qtyHiddenLayer = 1, int qtyOutputLayer = 1);
 
-    void exeANNBP(QList<double> inputValues); //executa para frente e faz o BP uma vez
+    void exeANNBP(QList<double> inputValues, bool trainning, bool logistic); //executa para frente e faz o BP uma vez
 
     void setInputLayer(QList<Neuron *>  *inputLayer = new QList<Neuron *>);
     void setHiddenLayer(QList<Neuron *> *hiddenLayer = new QList<Neuron *>);
@@ -30,9 +30,14 @@ public:
 
 private:
 
+    QList<double> inputClass(double &classExpected, int qtyOutPut);
+    //QList<double> getInputClass(double &classExpected, int qtyOutPut);
+    double randomDoubleNumber();
+
     double N;
 
-    double randomDoubleNumber();
+
+
 
     QList<Neuron *> *inputLayer;
     QList<Neuron *> *hiddenLayer;
