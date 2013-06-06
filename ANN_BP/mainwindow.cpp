@@ -109,6 +109,7 @@ void MainWindow::fileParse(QString fn)
                              QMessageBox::Ok);
 
     calcLayers();
+    updateTableNormalized();
 }
 
 void MainWindow::normalize(int key, QStringList l)
@@ -146,7 +147,25 @@ void MainWindow::normalize(int key, QStringList l)
 
 void MainWindow::updateTableNormalized()
 {
+    ui->tableWidget->setRowCount(0);
 
+    QHashIterator<int, QList<double> > i(*tempList);
+    while (i.hasNext()) {
+        i.next();
+
+        int col = 0;
+        int row = ui->tableWidget->rowCount();
+
+        ui->tableWidget->insertRow(row);
+
+        foreach (double dv, i.value()) {
+            // add the line to table
+            QTableWidgetItem *item = new QTableWidgetItem(QString::number(dv));
+            ui->tableWidget->setItem(row, col++, item);
+        }
+    }
+
+    emit tableUpdated();
 }
 
 void MainWindow::calcLayers()

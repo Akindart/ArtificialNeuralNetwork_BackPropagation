@@ -107,6 +107,9 @@
              <property name="text">
               <string>Ok</string>
              </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
           </layout>
