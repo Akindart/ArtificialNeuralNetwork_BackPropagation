@@ -50,8 +50,6 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 
 QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
 {
-    QHash<int, QList<double> > *tempList = new QHash<int, QList<double> >();
-
     ui->statusBar->showMessage(fn);
 
     QFile file(fn);
@@ -82,6 +80,8 @@ QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
         int col = 0;
         int row = ui->tableWidget->rowCount();
 
+        normalize(line_splited);
+
         QList<double> list_double;
 
         ui->tableWidget->insertRow(row);
@@ -94,7 +94,9 @@ QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
 
         }
 
+        //normalize(row, list_double);
         // put the numbers on hash
+        //QHash<int, QList<double> > *tempList;
         tempList->insert(row, list_double);
     }
 
@@ -116,4 +118,44 @@ QHash<int, QList<double> > * MainWindow::fileParse(QString fn)
                              QMessageBox::Ok);
 
     return tempList;
+}
+
+double MainWindow::normalize(QStringList &l)
+{
+    /**
+        X1,X2,X3,X4,X5,X6,classe
+        1,19,35,28,17,4,1
+    **/
+
+    QList<double> list_double;
+
+    // Min - Max of Line (l)
+    for (int i = 0; i < l.size() - 1; i++)
+        list_double.append(l.at(i).toDouble());
+
+    qSort(list_double.begin(), list_double.end());
+
+    qDebug() << list_double << "  " << list_double.first() << " " << list_double.last();
+
+    double line_min = list_double.first();
+    double line_max = list_double.last();
+
+    // Update all of them...
+    QStringList *l_new = new QStringList();
+    for (int i = 0; i < l.size() - 1; i++) {
+        double v = l.at(i).toDouble();
+        double v_new = (v - line_min) / (line_max - line_min);
+
+        //l_new->append(QString(v_new));
+    }
+
+    //l = l_new;
+
+
+
+
+
+
+
+    return 0;
 }
