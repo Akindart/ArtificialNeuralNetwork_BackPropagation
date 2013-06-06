@@ -5,6 +5,7 @@
 #include <neuron.h>
 #include <QList>
 #include <QString>
+#include <random>
 
 class ANN_BP : public QObject
 {
@@ -16,20 +17,24 @@ public:
 
     void exeANNBP(QString input); //executa para frente e faz o BP uma vez
 
-    void setInputLayer(QList<Neuron>  *inputLayer = new QList<Neuron>);
-    void setHiddenLayer(QList<Neuron> *hiddenLayer = new QList<Neuron>);
-    void setOutputLayer(QList<Neuron> *outputLayer = new QList<Neuron>);
+    void setInputLayer(QList<Neuron *>  *inputLayer = new QList<Neuron *>);
+    void setHiddenLayer(QList<Neuron *> *hiddenLayer = new QList<Neuron *>);
+    void setOutputLayer(QList<Neuron *> *outputLayer = new QList<Neuron *>);
 
-    QList<Neuron> *getInputLayer();
-    QList<Neuron> *getHiddenLayer();
-    QList<Neuron> *getOutputLayer();
+    QList<Neuron *> *getInputLayer();
+    QList<Neuron *> *getHiddenLayer();
+    QList<Neuron *> *getOutputLayer();
 
 
 private:
 
+    double N;
+
+    double randomDoubleNumber();
+
     QList<Neuron *> *inputLayer;
     QList<Neuron *> *hiddenLayer;
-    QList<Neuron> *outputLayer;
+    QList<Neuron *> *outputLayer;
 
 signals:
     

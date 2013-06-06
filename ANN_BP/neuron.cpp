@@ -5,7 +5,7 @@ Neuron::Neuron(QObject *parent):
     QObject(parent)
 {
 
-
+    this->weights = new QList<double>;
 
 }
 
@@ -90,6 +90,7 @@ void Neuron::calcNet(QList<Neuron *> *Neurons)
     this->setNet(tempSum);
 
 }
+
 
 void Neuron::setError(double error)
 {

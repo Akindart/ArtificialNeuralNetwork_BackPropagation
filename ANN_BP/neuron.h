@@ -39,6 +39,8 @@ private:
     double calcDerivLogistic(double n);
     void calcNet(QList<Neuron *> *Neurons);
 
+
+
     double error;
     double net;
     double output;
