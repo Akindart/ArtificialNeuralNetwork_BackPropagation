@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qtyInput = qtyHidden = qtyOutput = 0;
 
+
+
     connect(this, SIGNAL(tableUpdated()),
             ui->tableWidget, SLOT(resizeColumnsToContents()));
 }

@@ -6,7 +6,7 @@ Neuron::Neuron(QObject *parent, int id):
 {
 
     this->id = id;
-    this->weights = new QList<double>;
+    this->weights = new QList<double>();
 
 }
 
@@ -19,6 +19,7 @@ void Neuron::calcOutputValue(QList<Neuron *> *Neurons, bool logistic)
         this->setOutput(this->calcLogistic(this->getNet()));
     else  this->setOutput(this->calcTangHiperbolic(this->getNet()));
 
+    qDebug()<<this->getOutput()<<"\n";
 
 }
 
@@ -99,7 +100,8 @@ void Neuron::calcNet(QList<Neuron *> *Neurons)
     for(int i=0; i<Neurons->size(); i++){
 
         tempSum += (Neurons->at(i)->getOutput()*this->getWeights()->at(i));
-
+        qDebug()<<"Calculando net: neuronio "<<i<<"da camada anteiror com a a saida "<<Neurons->at(i)->getOutput()<<"\n";
+        qDebug()<<tempSum<<"\n";
     }
 
     this->setNet(tempSum);

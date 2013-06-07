@@ -8,10 +8,13 @@ ConfusionMatrix::ConfusionMatrix(QObject *parent, int qtyClasses) :
 
         QList<int> *tempList = new QList<int>();
 
-        for(int j=0; i<qtyClasses; j++)
+        for(int j=0; j<qtyClasses; j++){
             tempList->append(0);
+            qDebug()<<"Criaçao ConfusionMatrix: Ultimo item inserto na lista: "<<tempList->last()<<"Lista: "<<i<<"\n";
+        }
 
         this->indexes.insert(i+1, new QList<int>());
+
 
     }
 

@@ -13,6 +13,14 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
     QObject(parent)
 {
 
+    qDebug()<<"Input"<<qtyInputLayer<<"\n";
+    qDebug()<<"Hidden"<<qtyHiddenLayer<<"\n";
+    qDebug()<<"Output"<<qtyOutputLayer<<"\n";
+
+    this->inputLayer = new QList<Neuron *>();
+    this->hiddenLayer = new QList<Neuron *>();
+    this->outputLayer = new QList<Neuron *>();
+
     Neuron *tempNeuron;
     this->N = 0.01;
 
@@ -24,16 +32,22 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
         this->inputLayer->append(tempNeuron);
 
+        qDebug()<<tempNeuron->getId()<<"\n";
+
     }
 
     for(int i=0; i<qtyHiddenLayer; i++){
 
         tempNeuron = new Neuron(this, i);
 
-        for(int i=0; i<qtyInputLayer; i++)
+        for(int j=0; j<qtyInputLayer; j++){
             tempNeuron->getWeights()->append(this->randomDoubleNumber());
+            qDebug()<<"Peso "<<j<<" do neuronio: "<<i<<"da camada oculta: "<<tempNeuron->getWeights()->last()<<"\n";
 
+        }
         this->hiddenLayer->append(tempNeuron);
+
+        qDebug()<<tempNeuron->getId()<<"\n";
 
     }
 
@@ -41,10 +55,12 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
         tempNeuron = new Neuron(this, i);
 
-        for(int i=0; i<qtyHiddenLayer; i++)
+        for(int j=0; j<qtyHiddenLayer; j++)
             tempNeuron->getWeights()->append(this->randomDoubleNumber());
 
         this->outputLayer->append(tempNeuron);
+
+        qDebug()<<tempNeuron->getId()<<"\n";
 
     }
 
@@ -63,12 +79,13 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
 
     int iterator = (inputValues.size()-1);
 
-    for(int i=0; i<iterator; i++)
+    for(int i=0; i<iterator; i++){
         this->getInputLayer()->at(i)->setOutput(inputValues.at(i));
-
-    for(Neuron *tempNeuron : *this->getHiddenLayer())
-       tempNeuron->calcOutputValue(this->getInputLayer(), logistic);
-
+        qDebug()<<"Neuronio de entrada "<<i<<"com saida "<<this->getInputLayer()->at(i)->getOutput()<<"\n";
+    }
+    for(Neuron *tempNeuron : *this->getHiddenLayer()){
+        tempNeuron->calcOutputValue(this->getInputLayer(), logistic);
+    }
     for(Neuron *tempNeuron : *this->getOutputLayer()){
         tempNeuron->calcOutputValue(this->getHiddenLayer(), logistic);
         outputs.append(tempNeuron->getOutput());
@@ -108,7 +125,7 @@ double ANN_BP::randomDoubleNumber()
 
 }
 
-QList<double> ANN_BP::inputClass(double &classExpected, int qtyOutPut)
+QList<double> ANN_BP::inputClass(double classExpected, int qtyOutPut)
 {
 
     QList<double> *outputExpected = new QList<double>();
@@ -119,6 +136,7 @@ QList<double> ANN_BP::inputClass(double &classExpected, int qtyOutPut)
             outputExpected->append(1.0);
         else outputExpected->append(0.0);
 
+        qDebug()<<"Append: "<<outputExpected->last();
 
     }
 
