@@ -172,7 +172,7 @@ void MainWindow::calcLayers()
     QList<double> l_class;
 
     // Input Layer, amount of Neurons is the amount of COLs
-    qtyHidden = qtyInput = tempList->value(1).length() -1;
+    qtyInput = tempList->value(1).length() -1;
 
     QHashIterator<int, QList<double> > i(*tempList);
     while (i.hasNext()) {
@@ -188,7 +188,13 @@ void MainWindow::calcLayers()
      // Output Layer, amount of Neuros is th amount of CLASSes
      qtyOutput = l_class.length();
 
-     ui->lblInputLayer->setText(QString("<html>Input: <b>" + QString::number(qtyInput) + "</b></html>"));
-     ui->lblOutputLayer->setText(QString("<html>Output: <b>" + QString::number(qtyOutput) + "</b></html>"));
+     qtyHidden = (int) sqrt(qtyInput * qtyOutput);
+
+     ui->lblInputLayer->setText(QString("<html>Input: <b>" +
+                                QString::number(qtyInput) +
+                                "</b></html>"));
+     ui->lblOutputLayer->setText(QString("<html>Output: <b>" +
+                                QString::number(qtyOutput) +
+                                "</b></html>"));
      ui->edtHiddenLayer->setText(QString::number(qtyHidden));
 }
