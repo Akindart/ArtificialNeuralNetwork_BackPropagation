@@ -17,12 +17,17 @@ public:
 
     explicit ANN_BP(QObject *parent = 0, int qtyInputLayer = 1, int qtyHiddenLayer = 1, int qtyOutputLayer = 1);
 
-    void exeANNBP(QList<double> inputValues, bool trainning, bool logistic); //executa para frente e faz o BP uma vez
+    void exeANNBPLoopTraining(QHash<int, QList<double> > *tempList, bool logistic, bool error, double stopError, int qtyIterations);
+
+    void exeANNBPLoopTest(QHash<int, QList<double> > *tempList, bool logistic);
+
+    int exeANNBP(QList<double> inputValues, bool trainning, bool logistic, bool error, double stopError); //executa para frente e faz o BP uma vez
 
     void setInputLayer(QList<Neuron *>  *inputLayer = new QList<Neuron *>);
     void setHiddenLayer(QList<Neuron *> *hiddenLayer = new QList<Neuron *>);
     void setOutputLayer(QList<Neuron *> *outputLayer = new QList<Neuron *>);
     void setN(double N);
+    double calcANNBPError(double sumOutputError);
 
     ConfusionMatrix *getConfusionMatrix();
     double getN();

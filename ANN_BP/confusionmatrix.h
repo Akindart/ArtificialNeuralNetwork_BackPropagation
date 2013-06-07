@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QDebug>
 
 class ConfusionMatrix : public QObject
 {

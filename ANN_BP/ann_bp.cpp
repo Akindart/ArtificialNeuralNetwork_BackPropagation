@@ -71,11 +71,52 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
 }
 
-void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
+void ANN_BP::exeANNBPLoopTraining(QHash<int, QList<double> > *tempList, bool logistic, bool error, double stopError, int qtyIterations)
+{
+    bool stop = true;
+
+
+
+    if(error)
+        while(stop){
+
+            foreach(QList<double> inputString, *tempList){
+
+               if(exeANNBP(inputString, true, logistic, error, stopError)==1) stop = false;
+
+            }
+
+
+        }
+    else for(int i=0; i<qtyIterations; i++)
+            foreach(QList<double> inputString, *tempList){
+
+                exeANNBP(inputString, true, logistic, error, stopError);
+
+            }
+
+
+
+}
+
+void ANN_BP::exeANNBPLoopTest(QHash<int, QList<double> > *tempList, bool logistic)
+{
+
+    foreach(QList<double> inputString, *tempList){
+
+        exeANNBP(inputString, true, logistic, false, 0.0);
+
+    }
+
+}
+
+int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, bool error, double stopError)
 {
 
     QList<double> howOutputShouldBe;
     QList<double> outputs;
+
+    double tempError = 0.0;
 
     howOutputShouldBe = this->inputClass(inputValues.last(), this->getOutputLayer()->size());
 
@@ -87,29 +128,43 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
     }
     for(Neuron *tempNeuron : *this->getHiddenLayer()){
         tempNeuron->calcOutputValue(this->getInputLayer(), logistic);
+        qDebug()<<"Neuronio da camada oculta "<<tempNeuron->getId()<<"com saida "<<this->getHiddenLayer()->at(tempNeuron->getId())->getOutput()<<"\n";
     }
     for(Neuron *tempNeuron : *this->getOutputLayer()){
         tempNeuron->calcOutputValue(this->getHiddenLayer(), logistic);
+        qDebug()<<"Neuronio de saida "<<tempNeuron->getId()<<"com saida "<<this->getOutputLayer()->at(tempNeuron->getId())->getOutput()<<"\n";
         outputs.append(tempNeuron->getOutput());
     }
 
     if(trainning){
 
-        for(int i=0; i<iterator; i++)
-            this->getOutputLayer()->at(i)->calcErrorOutputLayer(howOutputShouldBe.at(i), logistic);
+        for(Neuron *tempNeuron : *this->getOutputLayer()){
+            tempNeuron->calcErrorOutputLayer(howOutputShouldBe.at(tempNeuron->getId()), logistic);
+            qDebug()<<"Saida esperada no neuronio "<<tempNeuron->getId()<<" da camada de saida: "<<howOutputShouldBe.at(tempNeuron->getId())<<"\n";
+            tempError += (tempNeuron->getError()*tempNeuron->getError());
 
-        for(Neuron *tempNeuron : *this->getHiddenLayer())
-            tempNeuron->calcErrorHiddenLayer(this->getInputLayer()->size(), this->getOutputLayer(), logistic);
+        }
 
-        for(Neuron *tempNeuron : *this->getOutputLayer())
+        if(error && (this->calcANNBPError(tempError) < stopError)) return 1;
+
+
+        for(Neuron *tempNeuron : *this->getHiddenLayer()){
+            tempNeuron->calcErrorHiddenLayer(this->getOutputLayer(), logistic);
+            qDebug()<<"Error do neuronio "<<tempNeuron->getId()<<" da camada oculta: "<<tempNeuron->getError()<<"\n";
+        }
+
+        for(Neuron *tempNeuron : *this->getOutputLayer()){
             tempNeuron->calcNewWeight(this->getN(), this->getHiddenLayer());
+        }
 
-        for(Neuron *tempNeuron : *this->getOutputLayer())
-             tempNeuron->calcNewWeight(this->getN(), this->getInputLayer());
-
+        for(Neuron *tempNeuron : *this->getHiddenLayer()){
+            tempNeuron->calcNewWeight(this->getN(), this->getInputLayer());
+        }
     }
 
     else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
+
+    return 0;
 
 }
 
@@ -117,7 +172,7 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
 double ANN_BP::randomDoubleNumber()
 {
 
-     return  ((double)rand()/(double)RAND_MAX);;
+    return (-1) + ((double)rand()/(double)RAND_MAX) * (2);
 
 }
 
@@ -144,6 +199,13 @@ void ANN_BP::setN(double N)
 {
 
     this->N = N;
+
+}
+
+double ANN_BP::calcANNBPError(double sumOutputError)
+{
+
+    return (0,5)*sumOutputError;
 
 }
 

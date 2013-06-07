@@ -21,7 +21,9 @@ int main(int argc, char *argv[])
     inputs.append(0.574);
     inputs.append(1);
 
-    ann_bp->exeANNBP(inputs, true, true);
+    ann_bp->exeANNBP(inputs, false, true, false, 0.0);
+
+
 
     return a.exec();
 }

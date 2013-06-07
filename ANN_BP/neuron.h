@@ -22,7 +22,7 @@ public:
     void setWeights(QList<double> *weights);
     void setValues(QList<double> *values);
     void calcErrorOutputLayer(double expectedOutput, bool logistic);
-    void calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons, bool logistic);
+    void calcErrorHiddenLayer(QList<Neuron *> *Neurons, bool logistic);
     void calcNewWeight(double N, QList<Neuron *> *Neurons);
 
     int getId();

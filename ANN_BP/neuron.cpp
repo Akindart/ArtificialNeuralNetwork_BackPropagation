@@ -54,9 +54,14 @@ void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
+    qDebug()<<"Error: "<<this->getError()<<"\n";
+
 }
 
-void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons, bool logistic)
+void Neuron::
+
+
+ calcErrorHiddenLayer(QList<Neuron *> *Neurons, bool logistic)
 {
 
     double deriv;
@@ -68,7 +73,7 @@ void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons, b
     else deriv = this->calcDerivTangHiperbolic(this->getNet());
 
 
-    for(int i=0; i<qtyInputLayer; i++){
+    for(int i=0; i<Neurons->size(); i++){
 
         tempSum += (Neurons->at(i)->getError()*this->getWeights()->at(i));
 
