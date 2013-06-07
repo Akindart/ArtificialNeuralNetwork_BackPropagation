@@ -141,7 +141,6 @@ void MainWindow::normalize(int key, QStringList l)
     // Last element is the CLASS
     list_temp.append(l.last().toDouble());
 
-    qDebug() << list_temp;
     tempList->insert(key, list_temp);
 }
 

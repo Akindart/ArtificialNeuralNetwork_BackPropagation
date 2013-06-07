@@ -63,6 +63,9 @@
            <property name="text">
             <string>Input</string>
            </property>
+           <property name="indent">
+            <number>-1</number>
+           </property>
           </widget>
          </item>
          <item>
@@ -287,18 +290,6 @@
             <string>Logistics</string>
            </property>
           </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox_3">
-        <property name="title">
-         <string>Hidden Layer Neurons</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QSpinBox" name="spinNeuronCamOculta"/>
          </item>
         </layout>
        </widget>
