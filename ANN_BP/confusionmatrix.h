@@ -12,8 +12,6 @@ public:
     void addClasses(QList<int> &classe);
     void addMatrix(QList<double> outputs, QList<double> howOutputShouldBe);
 
-
-
     QHash<int, QList<int> *> getIndexes();
 
 private:
