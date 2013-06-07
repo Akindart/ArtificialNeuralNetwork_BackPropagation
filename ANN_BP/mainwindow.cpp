@@ -204,7 +204,18 @@ void MainWindow::saveConfusionMatrix()
                                                     "",
                                                     "CSV (*.csv)");
 
-    QHash<int, QList<int> > matrix;
+    QHash<int, QList<int> *> matrix = artificialNN->getConfusionMatrix()->getIndexes();
+    QList<int> lista;
+
+    /*
+    lista << 0 << 0 << 0 << 0 << 0;
+    matrix.insert(1, lista);
+    matrix.insert(2, lista);
+    matrix.insert(3, lista);
+    matrix.insert(4, lista);
+    matrix.insert(5, lista);
+    */
+
 
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
@@ -216,29 +227,41 @@ void MainWindow::saveConfusionMatrix()
     QTextStream out(&file);
     QList<int> matrix_keys = matrix.keys();
 
-    QString keys_string = "#";
+    QString keys_string = "# ";
 
     foreach(int i, matrix_keys)
         keys_string += QString::number(i) + ",";
 
-    out << keys_string;
+    keys_string.remove(keys_string.length()-1, 1);
 
-    QHashIterator<int, QList<int> > i(matrix);
+    out << keys_string + "\n";
+
+    QHashIterator<int, QList<int> *> i(matrix);
     while (i.hasNext()) {
         i.next();
 
         QString values_string;
 
-        QList<int> matrix_values = i.value();
-        foreach (int matrix_value, matrix_values) {
+        QList<int> *matrix_values = i.value();
+        foreach (int matrix_value, *matrix_values) {
             values_string += QString::number(matrix_value) + ",";
         }
 
-        out << values_string;
+        values_string.remove(values_string.length()-1, 1);
+
+        out << QString::number(i.key()) << " " << values_string + "\n";
     }
 }
 
 void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()
 {
     saveConfusionMatrix();
+}
+
+void MainWindow::on_btnCreateNet_clicked()
+{
+    artificialNN = new ANN_BP(this,
+                              qtyInput,
+                              qtyHidden,
+                              qtyOutput);
 }
