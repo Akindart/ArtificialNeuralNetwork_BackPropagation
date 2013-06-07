@@ -6,6 +6,7 @@
 #include <QList>
 #include <QString>
 #include <random>
+#include <QDebug>
 #include "confusionmatrix.h"
 
 class ANN_BP : public QObject
@@ -32,7 +33,7 @@ public:
 
 private:
 
-    QList<double> inputClass(double &classExpected, int qtyOutPut);
+    QList<double> inputClass(double classExpected, int qtyOutPut);
     //QList<double> getInputClass(double &classExpected, int qtyOutPut);
     double randomDoubleNumber();
 

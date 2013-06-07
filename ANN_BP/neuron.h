@@ -5,7 +5,7 @@
 #include <QList>
 #include <QString>
 #include <cmath>
-
+#include <QDebug>
 
 class Neuron : public QObject
 {
