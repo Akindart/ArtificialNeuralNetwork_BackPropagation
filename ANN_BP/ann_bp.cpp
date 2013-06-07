@@ -21,6 +21,8 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
     this->hiddenLayer = new QList<Neuron *>();
     this->outputLayer = new QList<Neuron *>();
 
+    srand((unsigned)time(NULL));
+
     Neuron *tempNeuron;
     this->N = 0.01;
 
@@ -115,13 +117,7 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
 double ANN_BP::randomDoubleNumber()
 {
 
-    double lower_bound = -1;
-    double upper_bound = 1;
-    std::uniform_real_distribution<double> unif(lower_bound,upper_bound);
-    std::default_random_engine re;
-    double a_random_double = unif(re);
-
-    return a_random_double;
+     return  ((double)rand()/(double)RAND_MAX);;
 
 }
 
