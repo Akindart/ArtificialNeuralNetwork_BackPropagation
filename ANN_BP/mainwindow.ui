@@ -125,7 +125,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="btnCreateNet">
            <property name="text">
             <string>Create Net</string>
            </property>

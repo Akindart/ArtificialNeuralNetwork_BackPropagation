@@ -11,6 +11,9 @@
 #include <QFont>
 #include <QHash>
 
+#include "ann_bp.h"
+#include "confusionmatrix.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -26,10 +29,9 @@ public:
 
 private slots:
     void on_actionAbrir_arquivo_de_treinamento_triggered();
-
     void on_actionAbrir_arquivo_de_teste_triggered();
-
     void on_actionSalvar_matriz_de_confusao_triggered();
+    void on_btnCreateNet_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -40,6 +42,7 @@ private:
     int qtyInput;
     int qtyHidden;
     int qtyOutput;
+    ANN_BP *artificialNN;
 
     void fileParse(QString fn);
     void normalize(int key, QStringList l);
