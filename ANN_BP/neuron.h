@@ -1,4 +1,4 @@
-#ifndef NEURON_H
+﻿#ifndef NEURON_H
 #define NEURON_H
 
 #include <QObject>
@@ -11,9 +11,9 @@ class Neuron : public QObject
 {
     Q_OBJECT
 public:
-    explicit Neuron(QObject *parent = 0);
+    explicit Neuron(QObject *parent = 0, int id = 0);
 
-    void calcOutputValue(QList<Neuron *> *Neurons);
+    void calcOutputValue(QList<Neuron *> *Neurons, bool logistic);
 
     void setError(double error);
     void setNet(double net);
@@ -21,8 +21,8 @@ public:
     void setOutput(double output);
     void setWeights(QList<double> *weights);
     void setValues(QList<double> *values);
-    void calcErrorOutputLayer(double expectedOutput);
-    void calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons);
+    void calcErrorOutputLayer(double expectedOutput, bool logistic);
+    void calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons, bool logistic);
     void calcNewWeight(double N, QList<Neuron *> *Neurons);
 
     int getId();
@@ -40,17 +40,11 @@ private:
     void calcNet(QList<Neuron *> *Neurons);
 
 
-
     double error;
     double net;
     double output;
 
     int id;
-
-    bool logistica;
-    bool tangHiperbolica;
-
-
 
     QList<double> *weights;
     QList<double> *values;

@@ -1,22 +1,23 @@
 #include "neuron.h"
 
 
-Neuron::Neuron(QObject *parent):
+Neuron::Neuron(QObject *parent, int id):
     QObject(parent)
 {
 
+    this->id = id;
     this->weights = new QList<double>;
 
 }
 
-void Neuron::calcOutputValue(QList<Neuron *> *Neurons)
+void Neuron::calcOutputValue(QList<Neuron *> *Neurons, bool logistic)
 {
 
     this->calcNet(Neurons);
 
-    if(this->logistica)
+    if(logistic)
         this->setOutput(this->calcLogistic(this->getNet()));
-    else if(this->tangHiperbolica) this->setOutput(this->calcTangHiperbolic(this->getNet()));
+    else  this->setOutput(this->calcTangHiperbolic(this->getNet()));
 
 
 }
@@ -41,29 +42,29 @@ double Neuron::calcDerivLogistic(double n)
     return ( exp(-n) / ((1 + exp(-n)) * (1 + exp(-n))) );
 }
 
-void Neuron::calcErrorOutputLayer(double expectedOutput)
+void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
 {
     double deriv;
 
-    if(this->logistica)
+    if(logistic)
         deriv = this->calcDerivLogistic(this->getNet());
 
-    else if(this->tangHiperbolica) deriv = this->calcDerivTangHiperbolic(this->getNet());
+    else deriv = this->calcDerivTangHiperbolic(this->getNet());
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
 }
 
-void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons)
+void Neuron::calcErrorHiddenLayer(int qtyInputLayer, QList<Neuron *> *Neurons, bool logistic)
 {
 
     double deriv;
     double tempSum = 0.0;
 
-    if(this->logistica)
+    if(logistic)
         deriv = this->calcDerivLogistic(this->getNet());
 
-    else if(this->tangHiperbolica) deriv = this->calcDerivTangHiperbolic(this->getNet());
+    else deriv = this->calcDerivTangHiperbolic(this->getNet());
 
 
     for(int i=0; i<qtyInputLayer; i++){

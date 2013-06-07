@@ -18,10 +18,12 @@ QMAKE_CXXFLAGS += -std=c++0x
 SOURCES += main.cpp\
         mainwindow.cpp \
     ann_bp.cpp \
-    neuron.cpp
+    neuron.cpp \
+    confusionmatrix.cpp
 
 HEADERS  += mainwindow.h \
     ann_bp.h \
-    neuron.h
+    neuron.h \
+    confusionmatrix.h
 
 FORMS    += mainwindow.ui

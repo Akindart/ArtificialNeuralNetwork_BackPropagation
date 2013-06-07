@@ -6,6 +6,7 @@
 #include <QList>
 #include <QString>
 #include <random>
+#include "confusionmatrix.h"
 
 class ANN_BP : public QObject
 {
@@ -22,6 +23,7 @@ public:
     void setOutputLayer(QList<Neuron *> *outputLayer = new QList<Neuron *>);
     void setN(double N);
 
+    ConfusionMatrix *getConfusionMatrix();
     double getN();
     QList<Neuron *> *getInputLayer();
     QList<Neuron *> *getHiddenLayer();
@@ -36,9 +38,7 @@ private:
 
     double N;
 
-
-
-
+    ConfusionMatrix *confMatrix;
     QList<Neuron *> *inputLayer;
     QList<Neuron *> *hiddenLayer;
     QList<Neuron *> *outputLayer;

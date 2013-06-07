@@ -14,12 +14,11 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 {
 
     Neuron *tempNeuron;
-
     this->N = 0.01;
 
     for(int i=0; i<qtyInputLayer; i++){
 
-        tempNeuron = new Neuron();
+        tempNeuron = new Neuron(this, i);
 
         tempNeuron->getWeights()->append(1.0);
 
@@ -29,25 +28,27 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
     for(int i=0; i<qtyHiddenLayer; i++){
 
-        tempNeuron = new Neuron();
+        tempNeuron = new Neuron(this, i);
 
         for(int i=0; i<qtyInputLayer; i++)
             tempNeuron->getWeights()->append(this->randomDoubleNumber());
 
-        this->hiddenLayer->append(new Neuron());
+        this->hiddenLayer->append(tempNeuron);
 
     }
 
     for(int i=0; i<qtyOutputLayer; i++){
 
+        tempNeuron = new Neuron(this, i);
+
         for(int i=0; i<qtyHiddenLayer; i++)
             tempNeuron->getWeights()->append(this->randomDoubleNumber());
 
-        this->outputLayer->append(new Neuron());
+        this->outputLayer->append(tempNeuron);
 
     }
 
-
+    this->confMatrix = new ConfusionMatrix(this, qtyOutputLayer);
 
 
 }
@@ -56,6 +57,7 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
 {
 
     QList<double> howOutputShouldBe;
+    QList<double> outputs;
 
     howOutputShouldBe = this->inputClass(inputValues.last(), this->getOutputLayer()->size());
 
@@ -65,31 +67,30 @@ void ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic)
         this->getInputLayer()->at(i)->setOutput(inputValues.at(i));
 
     for(Neuron *tempNeuron : *this->getHiddenLayer())
-       tempNeuron->calcOutputValue(this->getInputLayer());
+       tempNeuron->calcOutputValue(this->getInputLayer(), logistic);
 
-    for(Neuron *tempNeuron : *this->getOutputLayer())
-        tempNeuron->calcOutputValue(this->getHiddenLayer());
+    for(Neuron *tempNeuron : *this->getOutputLayer()){
+        tempNeuron->calcOutputValue(this->getHiddenLayer(), logistic);
+        outputs.append(tempNeuron->getOutput());
+    }
 
     if(trainning){
 
         for(int i=0; i<iterator; i++)
-            this->getOutputLayer()->at(i)->calcErrorOutputLayer(howOutputShouldBe.at(i));
+            this->getOutputLayer()->at(i)->calcErrorOutputLayer(howOutputShouldBe.at(i), logistic);
 
         for(Neuron *tempNeuron : *this->getHiddenLayer())
-            tempNeuron->calcErrorHiddenLayer(this->getInputLayer()->size(), this->getOutputLayer());
+            tempNeuron->calcErrorHiddenLayer(this->getInputLayer()->size(), this->getOutputLayer(), logistic);
 
         for(Neuron *tempNeuron : *this->getOutputLayer())
             tempNeuron->calcNewWeight(this->getN(), this->getHiddenLayer());
 
-         for(Neuron *tempNeuron : *this->getOutputLayer())
+        for(Neuron *tempNeuron : *this->getOutputLayer())
              tempNeuron->calcNewWeight(this->getN(), this->getInputLayer());
 
     }
-    else{
 
-
-
-    }
+    else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
 
 }
 
@@ -129,6 +130,13 @@ void ANN_BP::setN(double N)
 {
 
     this->N = N;
+
+}
+
+ConfusionMatrix *ANN_BP::getConfusionMatrix()
+{
+
+    return this->confMatrix;
 
 }
 
