@@ -58,7 +58,6 @@ void MainWindow::fileParse(QString fn)
         QMessageBox::critical(this, "Erro",
                               "Ocorreu um erro ao abrir o arquivo",
                               QMessageBox::Ok);
-        //return;
     }
 
     QLabel *label = new QLabel("Processando. . .", this,  Qt::ToolTip);
@@ -187,7 +186,6 @@ void MainWindow::calcLayers()
 
      // Output Layer, amount of Neuros is th amount of CLASSes
      qtyOutput = l_class.length();
-
      qtyHidden = (int) sqrt(qtyInput * qtyOutput);
 
      ui->lblInputLayer->setText(QString("<html>Input: <b>" +
@@ -197,4 +195,43 @@ void MainWindow::calcLayers()
                                 QString::number(qtyOutput) +
                                 "</b></html>"));
      ui->edtHiddenLayer->setText(QString::number(qtyHidden));
+}
+
+void MainWindow::saveConfusionMatrix()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Matriz de Confusao"),
+                                                    "",
+                                                    "CSV (*.csv)");
+
+    QHash<int, QList<int> > matrix;
+
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
+        QMessageBox::critical(this, "Erro",
+                              "Ocorreu um erro ao salvar o arquivo",
+                              QMessageBox::Ok);
+    }
+
+    QTextStream out(&file);
+
+    QList<int> matrix_keys = matrix.keys();
+
+    QString keys_string = "-";
+
+    foreach(int i, matrix_keys)
+        keys_string += keys_string + QString::number(i) + ",";
+
+    out << keys_string;
+
+    QHashIterator<int, QList<int> > i(matrix);
+     while (i.hasNext()) {
+         i.next();
+         out << i.key() << ": " << i.value();
+     }
+}
+
+void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()
+{
+    saveConfusionMatrix();
 }

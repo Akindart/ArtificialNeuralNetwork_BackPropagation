@@ -29,6 +29,8 @@ private slots:
 
     void on_actionAbrir_arquivo_de_teste_triggered();
 
+    void on_actionSalvar_matriz_de_confusao_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -43,7 +45,7 @@ private:
     void normalize(int key, QStringList l);
     void updateTableNormalized();
     void calcLayers();
-
+    void saveConfusionMatrix();
 
 signals:
     void tableUpdated();

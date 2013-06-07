@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>637</width>
-    <height>617</height>
+    <width>653</width>
+    <height>553</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -324,7 +324,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>637</width>
+     <width>653</width>
      <height>20</height>
     </rect>
    </property>
@@ -335,6 +335,7 @@
     <addaction name="actionAbrir_arquivo_de_teste"/>
     <addaction name="actionAbrir_arquivo_de_treinamento"/>
     <addaction name="actionCriar_nova_Rede"/>
+    <addaction name="actionSalvar_matriz_de_confusao"/>
    </widget>
    <addaction name="menuAqruivo"/>
   </widget>
@@ -351,6 +352,11 @@
   <action name="actionCriar_nova_Rede">
    <property name="text">
     <string>Criar nova Rede</string>
+   </property>
+  </action>
+  <action name="actionSalvar_matriz_de_confusao">
+   <property name="text">
+    <string>Salvar matriz de confusao</string>
    </property>
   </action>
  </widget>
