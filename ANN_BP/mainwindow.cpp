@@ -214,21 +214,28 @@ void MainWindow::saveConfusionMatrix()
     }
 
     QTextStream out(&file);
-
     QList<int> matrix_keys = matrix.keys();
 
-    QString keys_string = "-";
+    QString keys_string = "#";
 
     foreach(int i, matrix_keys)
-        keys_string += keys_string + QString::number(i) + ",";
+        keys_string += QString::number(i) + ",";
 
     out << keys_string;
 
     QHashIterator<int, QList<int> > i(matrix);
-     while (i.hasNext()) {
-         i.next();
-         out << i.key() << ": " << i.value();
-     }
+    while (i.hasNext()) {
+        i.next();
+
+        QString values_string;
+
+        QList<int> matrix_values = i.value();
+        foreach (int matrix_value, matrix_values) {
+            values_string += QString::number(matrix_value) + ",";
+        }
+
+        out << values_string;
+    }
 }
 
 void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()
