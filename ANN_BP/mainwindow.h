@@ -14,7 +14,6 @@
 #include "ann_bp.h"
 #include "confusionmatrix.h"
 
-
 namespace Ui {
 class MainWindow;
 }

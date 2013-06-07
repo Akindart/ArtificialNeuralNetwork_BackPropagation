@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QHash>
-#include <QDebug>
 
 class ConfusionMatrix : public QObject
 {
@@ -12,9 +11,6 @@ public:
     explicit ConfusionMatrix(QObject *parent = 0, int qtyClasses = 0);
     void addClasses(QList<int> &classe);
     void addMatrix(QList<double> outputs, QList<double> howOutputShouldBe);
-
-
-
     QHash<int, QList<int> *> getIndexes();
 
 private:
