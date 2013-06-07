@@ -145,6 +145,8 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
 
         }
 
+        qDebug()<<"Net Error"<<this->calcANNBPError(tempError)<<"\n";
+
         if(error && (this->calcANNBPError(tempError) < stopError)) return 1;
 
 
@@ -163,6 +165,8 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
     }
 
     else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
+
+
 
     return 0;
 
