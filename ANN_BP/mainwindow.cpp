@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qtyInput = qtyHidden = qtyOutput = 0;
 
+    // label processing...
+    lblProcess = new QLabel("Processando. . .", this,  Qt::ToolTip);
+    lblProcess->setStyleSheet("font: 75 20pt \"Arial\";background-color: white;");
+
     connect(this, SIGNAL(tableUpdated()),
             ui->tableWidget, SLOT(resizeColumnsToContents()));
 }
@@ -40,6 +44,8 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
          qDebug() << i.key() << ": " << i.value();
      }
      **/
+
+    ui->grpCreateANN->setEnabled(true);
 }
 
 void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
@@ -62,12 +68,7 @@ void MainWindow::fileParse(QString fn)
                               QMessageBox::Ok);
     }
 
-    QLabel *label = new QLabel("Processando. . .", this,  Qt::ToolTip);
-    label->setStyleSheet("font: 75 20pt \"Arial\";background-color: white;");
-    label->show();
-
-    // Force the App to update the window and show the label
-    QApplication::processEvents();
+    processing(true);
 
     QTextStream in(&file);
 
@@ -96,7 +97,7 @@ void MainWindow::fileParse(QString fn)
 
     ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
 
-    label->close();
+    processing(false);
 
     qDebug() << "Arquivo lido!";
 
@@ -255,6 +256,22 @@ void MainWindow::saveConfusionMatrix()
     }
 }
 
+void MainWindow::processing(bool b)
+{
+    if (b) {
+        lblProcess->setAlignment(Qt::AlignCenter);
+        lblProcess->show();
+
+    }
+    else
+        lblProcess->hide();
+
+    // Force the App to update the window and show the label
+    QApplication::processEvents();
+
+
+}
+
 void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()
 {
     saveConfusionMatrix();
@@ -262,10 +279,19 @@ void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()
 
 void MainWindow::on_btnCreateNet_clicked()
 {
+    processing(true);
+
     artificialNN = new ANN_BP(this,
                               qtyInput,
                               qtyHidden,
                               qtyOutput);
+
+    processing(false);
+
+    // update groups
+    ui->grpFunction->setEnabled(true);
+    ui->grpStopCriteria->setEnabled(true);
+    ui->btnTraining->setEnabled(true);
 }
 
 void MainWindow::on_btnTraining_clicked()
@@ -275,11 +301,19 @@ void MainWindow::on_btnTraining_clicked()
                          bool logistic, bool error,
                          double stopError, int qtyIterations)
     **/
+    qDebug() << ui->rdbLogistica->isChecked() << ", " <<
+                ui->rdbErro->isChecked() << ", " <<
+                ui->spinErro->text().toDouble() << ", " <<
+                ui->spinMaxIteracoes->text().toInt();
+
+    processing(true);
 
     artificialNN->exeANNBPLoopTraining(tempList,
                                        ui->rdbLogistica->isChecked(),
                                        ui->rdbErro->isChecked(),
                                        ui->spinErro->text().toDouble(),
                                        ui->spinMaxIteracoes->text().toInt());
+
+    processing(false);
 
 }

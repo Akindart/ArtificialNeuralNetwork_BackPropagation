@@ -50,9 +50,9 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QGroupBox" name="grpLayer">
+       <widget class="QGroupBox" name="grpCreateANN">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="title">
          <string>Creating Artificial Neural Network</string>
@@ -135,9 +135,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_5">
+       <widget class="QGroupBox" name="grpChangeWeights">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="title">
          <string>Changing Weights</string>
@@ -225,7 +225,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="grpStopCriteria">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="title">
          <string>Stop Criteria</string>
         </property>
@@ -270,6 +273,9 @@
       </item>
       <item>
        <widget class="QGroupBox" name="grpFunction">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="title">
          <string>Function</string>
         </property>
@@ -296,6 +302,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="btnTraining">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Training</string>
         </property>

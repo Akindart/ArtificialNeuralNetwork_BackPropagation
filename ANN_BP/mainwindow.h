@@ -44,12 +44,14 @@ private:
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
+    QLabel *lblProcess;
 
     void fileParse(QString fn);
     void normalize(int key, QStringList l);
     void updateTableNormalized();
     void calcLayers();
     void saveConfusionMatrix();
+    void processing(bool b);
 
 signals:
     void tableUpdated();

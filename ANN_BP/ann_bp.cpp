@@ -71,7 +71,9 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
 }
 
-void ANN_BP::exeANNBPLoopTraining(QHash<int, QList<double> > *tempList, bool logistic, bool error, double stopError, int qtyIterations)
+void ANN_BP::exeANNBPLoopTraining(QHash<int, QList<double> > *tempList,
+                                  bool logistic, bool error,
+                                  double stopError, int qtyIterations)
 {
     bool stop = true;
 
