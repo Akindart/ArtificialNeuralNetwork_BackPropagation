@@ -259,12 +259,14 @@ void MainWindow::saveConfusionMatrix()
 void MainWindow::processing(bool b)
 {
     if (b) {
-        lblProcess->setAlignment(Qt::AlignCenter);
-        lblProcess->show();
+        ui->progressBar->setFormat("Processing. . .");
+        ui->progressBar->setMaximum(0);
 
     }
-    else
-        lblProcess->hide();
+    else {
+        ui->progressBar->setFormat("Done!");
+        ui->progressBar->setMaximum(100);
+    }
 
     // Force the App to update the window and show the label
     QApplication::processEvents();
