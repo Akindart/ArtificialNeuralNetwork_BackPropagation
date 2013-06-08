@@ -30,6 +30,8 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
 
     fileParse(file_name);
 
+    // execute training
+
     // How to iterate over the hash
     /**
     QHashIterator<int, QList<double> > i(*tempList);
@@ -45,7 +47,7 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 
     QString testFileName = QFileDialog::getOpenFileName(this, tr("Arquivo de Teste"), "", "Text files (*.txt)");
 
-    //this->testFile = new QFile(testFileName);
+    // execute test
 
 }
 
@@ -264,4 +266,20 @@ void MainWindow::on_btnCreateNet_clicked()
                               qtyInput,
                               qtyHidden,
                               qtyOutput);
+}
+
+void MainWindow::on_btnTraining_clicked()
+{
+    /**
+    exeANNBPLoopTraining(QHash<int, QList<double> > *tempList,
+                         bool logistic, bool error,
+                         double stopError, int qtyIterations)
+    **/
+
+    artificialNN->exeANNBPLoopTraining(tempList,
+                                       ui->rdbLogistica->isChecked(),
+                                       ui->rdbErro->isChecked(),
+                                       ui->spinErro->text().toDouble(),
+                                       ui->spinMaxIteracoes->text().toInt());
+
 }

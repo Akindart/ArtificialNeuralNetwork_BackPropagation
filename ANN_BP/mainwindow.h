@@ -32,6 +32,8 @@ private slots:
     void on_actionSalvar_matriz_de_confusao_triggered();
     void on_btnCreateNet_clicked();
 
+    void on_btnTraining_clicked();
+
 private:
     Ui::MainWindow *ui;
 

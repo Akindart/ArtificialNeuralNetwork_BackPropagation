@@ -212,7 +212,7 @@ void ANN_BP::setN(double N)
 double ANN_BP::calcANNBPError(double sumOutputError)
 {
 
-    return (0,5)*sumOutputError;
+    return (0.5)*sumOutputError;
 
 }
 

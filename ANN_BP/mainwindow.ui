@@ -295,9 +295,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="btnTraining">
         <property name="text">
-         <string>DO IT!</string>
+         <string>Training</string>
         </property>
        </widget>
       </item>
