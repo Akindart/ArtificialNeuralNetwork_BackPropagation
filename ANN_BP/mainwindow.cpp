@@ -10,11 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->tempList = new QHash<int, QList<double> >();
 
     qtyInput = qtyHidden = qtyOutput = 0;
-
-    // label processing...
-    lblProcess = new QLabel("Processando. . .", this,  Qt::ToolTip);
-    lblProcess->setStyleSheet("font: 75 20pt \"Arial\";background-color: white;");
-
     connect(this, SIGNAL(tableUpdated()),
             ui->tableWidget, SLOT(resizeColumnsToContents()));
 }
@@ -32,20 +27,13 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
                                                      "",
                                                      "CSV (*.csv);; TXT (*.txt)");
 
-    fileParse(file_name);
+    if (!file_name.isEmpty()) {
+        fileParse(file_name);
 
-    // execute training
+        // execute training
+        ui->grpCreateANN->setEnabled(true);
+    }
 
-    // How to iterate over the hash
-    /**
-    QHashIterator<int, QList<double> > i(*tempList);
-     while (i.hasNext()) {
-         i.next();
-         qDebug() << i.key() << ": " << i.value();
-     }
-     **/
-
-    ui->grpCreateANN->setEnabled(true);
 }
 
 void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
@@ -270,8 +258,6 @@ void MainWindow::processing(bool b)
 
     // Force the App to update the window and show the label
     QApplication::processEvents();
-
-
 }
 
 void MainWindow::on_actionSalvar_matriz_de_confusao_triggered()

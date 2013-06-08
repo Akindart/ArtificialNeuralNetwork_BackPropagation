@@ -44,7 +44,6 @@ private:
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
-    QLabel *lblProcess;
 
     void fileParse(QString fn);
     void normalize(int key, QStringList l);
