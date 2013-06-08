@@ -34,6 +34,9 @@ private slots:
 
     void on_btnTraining_clicked();
 
+public slots:
+    void updateConfusionMatrix();
+
 private:
     Ui::MainWindow *ui;
 
@@ -48,12 +51,14 @@ private:
     void fileParse(QString fn);
     void normalize(int key, QStringList l);
     void updateTableNormalized();
+
     void calcLayers();
     void saveConfusionMatrix();
     void processing(bool b);
 
 signals:
     void tableUpdated();
+
 
 };
 

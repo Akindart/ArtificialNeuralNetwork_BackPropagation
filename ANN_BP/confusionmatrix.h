@@ -18,8 +18,6 @@ private:
 
     QHash<int, QList<int> *> indexes;
     
-signals:
-    
 public slots:
     
 };

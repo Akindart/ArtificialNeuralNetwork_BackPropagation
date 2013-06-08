@@ -10,8 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->tempList = new QHash<int, QList<double> >();
 
     qtyInput = qtyHidden = qtyOutput = 0;
-    connect(this, SIGNAL(tableUpdated()),
-            ui->tableWidget, SLOT(resizeColumnsToContents()));
+
+    connect(this, SIGNAL(tableUpdated()), ui->tableWidget, SLOT(resizeColumnsToContents()));
 }
 
 
@@ -157,6 +157,40 @@ void MainWindow::updateTableNormalized()
     emit tableUpdated();
 }
 
+void MainWindow::updateConfusionMatrix()
+{
+    // The Matrix
+    QHash<int, QList<int> *> matrix = artificialNN->getConfusionMatrix()->getIndexes();
+    // The Keys
+    QList<int> matrix_keys = matrix.keys();
+
+    QStringList keys_string;
+
+    foreach(int i, matrix_keys)
+        keys_string.append(QString::number(i));
+
+    ui->tableConfusion->setColumnCount(keys_string.length());
+    ui->tableConfusion->setHorizontalHeaderLabels(keys_string);
+
+    QHashIterator<int, QList<int> *> i(matrix);
+    while (i.hasNext()) {
+        i.next();
+
+        int col = 0;
+        int row = ui->tableWidget->rowCount();
+
+        ui->tableWidget->insertRow(row);
+
+        QList<int> *matrix_values = i.value();
+        foreach (int matrix_value, *matrix_values) {
+            // add the line to table
+            QTableWidgetItem *item = new QTableWidgetItem(QString::number(matrix_value));
+            ui->tableWidget->setItem(row, col++, item);
+        }
+    }
+
+}
+
 void MainWindow::calcLayers()
 {
     QList<double> l_class;
@@ -195,18 +229,10 @@ void MainWindow::saveConfusionMatrix()
                                                     "",
                                                     "CSV (*.csv)");
 
+    if (fileName.isEmpty())
+        return;
+
     QHash<int, QList<int> *> matrix = artificialNN->getConfusionMatrix()->getIndexes();
-    QList<int> lista;
-
-    /*
-    lista << 0 << 0 << 0 << 0 << 0;
-    matrix.insert(1, lista);
-    matrix.insert(2, lista);
-    matrix.insert(3, lista);
-    matrix.insert(4, lista);
-    matrix.insert(5, lista);
-    */
-
 
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
@@ -273,6 +299,8 @@ void MainWindow::on_btnCreateNet_clicked()
                               qtyInput,
                               qtyHidden,
                               qtyOutput);
+
+    connect(artificialNN, SIGNAL(matrixUpdated()), this, SLOT(updateConfusionMatrix()));
 
     processing(false);
 

@@ -45,7 +45,6 @@ void ConfusionMatrix::addMatrix(QList<double> outputs, QList<double> howOutputSh
     int tempValue = this->indexes.value(MaxExpected+1)->at(MaxOut) + 1;
     this->indexes.value(MaxExpected+1)->replace(MaxOut, tempValue);
     qDebug()<<"Lina "<<MaxExpected<<", Coluna "<< MaxOut <<", com valor "<<this->indexes.value(MaxExpected+1)->at(MaxOut)<<"\n";
-
 }
 
 QHash<int, QList<int> *> ConfusionMatrix::getIndexes()

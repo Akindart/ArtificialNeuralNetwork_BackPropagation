@@ -50,6 +50,7 @@ private:
     QList<Neuron *> *outputLayer;
 
 signals:
+    void matrixUpdated();
     
 public slots:
     

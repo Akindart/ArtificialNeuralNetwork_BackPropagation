@@ -172,6 +172,7 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
     else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
 
 
+    emit matrixUpdated();
 
     return 0;
 
