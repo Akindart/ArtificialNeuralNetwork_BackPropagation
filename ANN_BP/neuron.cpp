@@ -19,7 +19,7 @@ void Neuron::calcOutputValue(QList<Neuron *> *Neurons, bool logistic)
         this->setOutput(this->calcLogistic(this->getNet()));
     else  this->setOutput(this->calcTangHiperbolic(this->getNet()));
 
-    qDebug()<<this->getOutput()<<"\n";
+    //qDebug()<<this->getOutput()<<"\n";
 
 }
 
@@ -54,7 +54,7 @@ void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
-    qDebug()<<"Error: "<<this->getError()<<"\n";
+    qDebug()<<this->getId()<<" - "<<"Error: "<<this->getError()<<"\n";
 
 }
 
@@ -104,9 +104,12 @@ void Neuron::calcNet(QList<Neuron *> *Neurons)
 
     for(int i=0; i<Neurons->size(); i++){
 
-        tempSum += (Neurons->at(i)->getOutput()*this->getWeights()->at(i));
-        qDebug()<<"Calculando net: neuronio "<<i<<"da camada anteiror com a a saida "<<Neurons->at(i)->getOutput()<<"\n";
-        qDebug()<<tempSum<<"\n";
+        tempSum = tempSum + (Neurons->at(i)->getOutput()*this->getWeights()->at(i));
+        //qDebug()<<"Neurons->at("<<i<<")->getOutput()*this->getWeights()->at("<<i<<")"<<"\n";
+        //qDebug()<<Neurons->at(i)->getOutput()<<"*"<<this->getWeights()->at(i)<<"\n";
+        //qDebug()<<"Calculando net: neuronio "<<i<<"da camada anteiror com a a saida "<<Neurons->at(i)->getOutput()<<"\n";
+        //qDebug()<<tempSum<<"\n";
+
     }
 
     this->setNet(tempSum);

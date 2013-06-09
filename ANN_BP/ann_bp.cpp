@@ -13,9 +13,9 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
     QObject(parent)
 {
 
-    qDebug()<<"Input"<<qtyInputLayer<<"\n";
-    qDebug()<<"Hidden"<<qtyHiddenLayer<<"\n";
-    qDebug()<<"Output"<<qtyOutputLayer<<"\n";
+    //qDebug()<<"Input"<<qtyInputLayer<<"\n";
+    //qDebug()<<"Hidden"<<qtyHiddenLayer<<"\n";
+    //qDebug()<<"Output"<<qtyOutputLayer<<"\n";
 
     this->inputLayer = new QList<Neuron *>();
     this->hiddenLayer = new QList<Neuron *>();
@@ -34,7 +34,7 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
         this->inputLayer->append(tempNeuron);
 
-        qDebug()<<tempNeuron->getId()<<"\n";
+        //qDebug()<<tempNeuron->getId()<<"\n";
 
     }
 
@@ -44,12 +44,12 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
         for(int j=0; j<qtyInputLayer; j++){
             tempNeuron->getWeights()->append(this->randomDoubleNumber());
-            qDebug()<<"Peso "<<j<<" do neuronio: "<<i<<"da camada oculta: "<<tempNeuron->getWeights()->last()<<"\n";
+            //qDebug()<<"Peso "<<j<<" do neuronio: "<<i<<"da camada oculta: "<<tempNeuron->getWeights()->last()<<"\n";
 
         }
         this->hiddenLayer->append(tempNeuron);
 
-        qDebug()<<tempNeuron->getId()<<"\n";
+        //qDebug()<<tempNeuron->getId()<<"\n";
 
     }
 
@@ -62,7 +62,7 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
 
         this->outputLayer->append(tempNeuron);
 
-        qDebug()<<tempNeuron->getId()<<"\n";
+        //qDebug()<<tempNeuron->getId()<<"\n";
 
     }
 
@@ -126,7 +126,8 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
 
     for(int i=0; i<iterator; i++){
         this->getInputLayer()->at(i)->setOutput(inputValues.at(i));
-        qDebug()<<"Neuronio de entrada "<<i<<"com saida "<<this->getInputLayer()->at(i)->getOutput()<<"\n";
+        //qDebug()<<"Neuronio de entrada "<<i<<"com saida "<<this->getInputLayer()->at(i)->getOutput()<<"\n";
+
     }
     for(Neuron *tempNeuron : *this->getHiddenLayer()){
         tempNeuron->calcOutputValue(this->getInputLayer(), logistic);
@@ -134,30 +135,29 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
     }
     for(Neuron *tempNeuron : *this->getOutputLayer()){
         tempNeuron->calcOutputValue(this->getHiddenLayer(), logistic);
-        qDebug()<<"Neuronio de saida "<<tempNeuron->getId()<<"com saida "<<this->getOutputLayer()->at(tempNeuron->getId())->getOutput()<<"\n";
+        //qDebug()<<"Neuronio de saida "<<tempNeuron->getId()<<"com saida "<<this->getOutputLayer()->at(tempNeuron->getId())->getOutput()<<"\n";
         outputs.append(tempNeuron->getOutput());
     }
 
-
-
-    for(Neuron *tempNeuron : *this->getOutputLayer()){
-        tempNeuron->calcErrorOutputLayer(howOutputShouldBe.at(tempNeuron->getId()), logistic);
-        qDebug()<<"Saida esperada no neuronio "<<tempNeuron->getId()<<" da camada de saida: "<<howOutputShouldBe.at(tempNeuron->getId())<<"\n";
-        tempError += (tempNeuron->getError()*tempNeuron->getError());
-
-    }
-
-    qDebug()<<"Net Error"<<this->calcANNBPError(tempError)<<"\n";
-
-    if(error && (this->calcANNBPError(tempError) < stopError)) return 1;
-
-
-    for(Neuron *tempNeuron : *this->getHiddenLayer()){
-        tempNeuron->calcErrorHiddenLayer(this->getOutputLayer(), logistic);
-        qDebug()<<"Error do neuronio "<<tempNeuron->getId()<<" da camada oculta: "<<tempNeuron->getError()<<"\n";
-    }
-
     if(trainning){
+
+        for(Neuron *tempNeuron : *this->getOutputLayer()){
+            tempNeuron->calcErrorOutputLayer(howOutputShouldBe.at(tempNeuron->getId()), logistic);
+            //qDebug()<<"Saida esperada no neuronio "<<tempNeuron->getId()<<" da camada de saida: "<<howOutputShouldBe.at(tempNeuron->getId())<<"\n";
+            tempError += (tempNeuron->getError()*tempNeuron->getError());
+
+        }
+
+        //qDebug()<<"Net Error"<<this->calcANNBPError(tempError)<<"\n";
+
+        if(error && (this->calcANNBPError(tempError) < stopError)) return 1;
+
+
+        for(Neuron *tempNeuron : *this->getHiddenLayer()){
+            tempNeuron->calcErrorHiddenLayer(this->getOutputLayer(), logistic);
+            //qDebug()<<"Error do neuronio "<<tempNeuron->getId()<<" da camada oculta: "<<tempNeuron->getError()<<"\n";
+        }
+
 
         for(Neuron *tempNeuron : *this->getOutputLayer()){
             tempNeuron->calcNewWeight(this->getN(), this->getHiddenLayer());
@@ -169,7 +169,8 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
 
     }
 
-    else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
+    //else
+        this->confMatrix->addMatrix(outputs, howOutputShouldBe);
 
 
     emit matrixUpdated();
@@ -197,7 +198,7 @@ QList<double> ANN_BP::inputClass(double classExpected, int qtyOutPut)
             outputExpected->append(1.0);
         else outputExpected->append(0.0);
 
-        qDebug()<<"Append: "<<outputExpected->last();
+        //qDebug()<<"Append: "<<outputExpected->last();
 
     }
 
