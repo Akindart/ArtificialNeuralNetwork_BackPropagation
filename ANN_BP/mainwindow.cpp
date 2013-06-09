@@ -49,13 +49,9 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 
     if (!testFileName.isEmpty()) {
         fileTestParse(testFileName);
-
         // execute training
         ui->grpCreateANN->setEnabled(true);
     }
-
-
-
 }
 
 void MainWindow::fileParse(QString fn)
@@ -469,19 +465,9 @@ void MainWindow::on_btnTraining_clicked()
 
 void MainWindow::on_btnRunTest_clicked()
 {
-    /**
-    exeANNBPLoopTraining(QHash<int, QList<double> > *tempList,
-                         bool logistic, bool error,
-                         double stopError, int qtyIterations)
-    **/
-    qDebug() << ui->rdbLogistica->isChecked() << ", " <<
-                ui->rdbErro->isChecked() << ", " <<
-                ui->spinErro->text().toDouble() << ", " <<
-                ui->spinMaxIteracoes->text().toInt();
-
     processing(true);
 
-    artificialNN->exeANNBPLoopTest(tempList,
+    artificialNN->exeANNBPLoopTest(testList,
                                    ui->rdbLogistica->isChecked());
 
     updateConfusionMatrix();
