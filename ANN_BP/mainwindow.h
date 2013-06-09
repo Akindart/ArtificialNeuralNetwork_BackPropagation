@@ -34,6 +34,8 @@ private slots:
 
     void on_btnTraining_clicked();
 
+    void on_btnRunTest_clicked();
+
 public slots:
     void updateConfusionMatrix();
 
@@ -43,14 +45,18 @@ private:
     QFile *traningFile;
     QFile *testFile;
     QHash<int, QList<double> > *tempList;
+    QHash<int, QList<double> > *testList;
     int qtyInput;
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
 
     void fileParse(QString fn);
+    void fileTestParse(QString fn);
     void normalize(int key, QStringList l);
+    void normalizeTest(int key, QStringList l);
     void updateTableNormalized();
+    void updateTestTableNormalized();
 
     void calcLayers();
     void saveConfusionMatrix();

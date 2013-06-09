@@ -8,11 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     this->tempList = new QHash<int, QList<double> >();
+    this->testList = new QHash<int, QList<double> >();
 
     qtyInput = qtyHidden = qtyOutput = 0;
 
     connect(this, SIGNAL(tableUpdated()), ui->tableWidget, SLOT(resizeColumnsToContents()));
     connect(this, SIGNAL(tableUpdated()), ui->tableConfusion, SLOT(resizeColumnsToContents()));
+    connect(this, SIGNAL(tableUpdated()), ui->tableTest, SLOT(resizeColumnsToContents()));
 }
 
 
@@ -43,9 +45,16 @@ void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
     QString testFileName = QFileDialog::getOpenFileName(this,
                                                         tr("Arquivo de Teste"),
                                                         "",
-                                                        "Text files (*.txt)");
+                                                     "CSV (*.csv);; TXT (*.txt)");
 
-    // execute test
+    if (!testFileName.isEmpty()) {
+        fileTestParse(testFileName);
+
+        // execute training
+        ui->grpCreateANN->setEnabled(true);
+    }
+
+
 
 }
 
@@ -87,8 +96,6 @@ void MainWindow::fileParse(QString fn)
 
     emit tableUpdated();
 
-    // ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
-
     processing(false);
 
     qDebug() << "Arquivo lido!";
@@ -104,6 +111,64 @@ void MainWindow::fileParse(QString fn)
 
     calcLayers();
     updateTableNormalized();
+}
+
+void MainWindow::fileTestParse(QString fn)
+{
+    qDebug() << "fileTestParse";
+
+    ui->statusBar->showMessage(fn);
+
+    QFile file(fn);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Erro",
+                              "Ocorreu um erro ao abrir o arquivo",
+                              QMessageBox::Ok);
+    }
+
+    processing(true);
+
+    QTextStream in(&file);
+
+    // read the fist line. It contains the HEADERS
+    QStringList first_line = in.readLine().split(",");
+    ui->tableTest->setColumnCount(first_line.length());
+    ui->tableTest->setHorizontalHeaderLabels(first_line);
+
+    while (!in.atEnd()) {
+        QStringList line_splited = in.readLine().split(",");
+
+        int col = 0;
+        int row = ui->tableTest->rowCount();
+
+        normalizeTest(row, line_splited);
+
+        ui->tableTest->insertRow(row);
+        foreach (QString s, line_splited) {
+            // add the line to table
+            QTableWidgetItem *item = new QTableWidgetItem(s);
+            ui->tableTest->setItem(row, col++, item);
+        }
+    }
+
+    emit tableUpdated();
+
+    // ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
+
+    processing(false);
+
+    qDebug() << "Arquivo lido!";
+
+    QFileInfo fi(file);
+    QMessageBox::information(this,
+                             "Arquivo carregado!",
+                             "O arquivo \"" + fi.completeBaseName() +
+                             "." +
+                             fi.completeSuffix() +
+                             "\" foi carregado!",
+                             QMessageBox::Ok);
+
+    updateTestTableNormalized();
 }
 
 void MainWindow::normalize(int key, QStringList l)
@@ -138,24 +203,84 @@ void MainWindow::normalize(int key, QStringList l)
     tempList->insert(key, list_temp);
 }
 
+void MainWindow::normalizeTest(int key, QStringList l)
+{
+    /**
+        X1, X2, X3, X4, X5, X6, classe
+        1,  19, 35, 28, 17, 4,  1
+    **/
+
+    QList<double> list_double;
+    QList<double> list_temp;
+
+    // Min - Max of Line (l)
+    for (int i = 0; i < l.size() - 1; i++)
+        list_double.append(l.at(i).toDouble());
+
+    qSort(list_double.begin(), list_double.end());
+
+    double line_min = list_double.first();
+    double line_max = list_double.last();
+
+    // Update all of them...
+    for (int i = 0; i < l.size() - 1; i++) {
+        double v = l.at(i).toDouble();
+        double v_new = (v - line_min) / (line_max - line_min);
+        list_temp.append(v_new);
+    }
+
+    // Last element is the CLASS
+    list_temp.append(l.last().toDouble());
+
+    testList->insert(key, list_temp);
+}
+
 void MainWindow::updateTableNormalized()
 {
     // "reset" the table
     ui->tableWidget->setRowCount(0);
-
     QHashIterator<int, QList<double> > i(*tempList);
+
+    int row;
+
     while (i.hasNext()) {
         i.next();
 
         int col = 0;
-        int row = ui->tableWidget->rowCount();
 
+        row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row);
 
         foreach (double dv, i.value()) {
             // add the line to table
             QTableWidgetItem *item = new QTableWidgetItem(QString::number(dv));
             ui->tableWidget->setItem(row, col++, item);
+        }
+    }
+
+    emit tableUpdated();
+}
+
+void MainWindow::updateTestTableNormalized()
+{
+    // "reset" the table
+    ui->tableTest->setRowCount(0);
+    QHashIterator<int, QList<double> > i(*testList);
+
+    int row;
+
+    while (i.hasNext()) {
+        i.next();
+
+        int col = 0;
+
+        row = ui->tableTest->rowCount();
+        ui->tableTest->insertRow(row);
+
+        foreach (double dv, i.value()) {
+            // add the line to table
+            QTableWidgetItem *item = new QTableWidgetItem(QString::number(dv));
+            ui->tableTest->setItem(row, col++, item);
         }
     }
 
@@ -340,4 +465,26 @@ void MainWindow::on_btnTraining_clicked()
 
     processing(false);
 
+}
+
+void MainWindow::on_btnRunTest_clicked()
+{
+    /**
+    exeANNBPLoopTraining(QHash<int, QList<double> > *tempList,
+                         bool logistic, bool error,
+                         double stopError, int qtyIterations)
+    **/
+    qDebug() << ui->rdbLogistica->isChecked() << ", " <<
+                ui->rdbErro->isChecked() << ", " <<
+                ui->spinErro->text().toDouble() << ", " <<
+                ui->spinMaxIteracoes->text().toInt();
+
+    processing(true);
+
+    artificialNN->exeANNBPLoopTest(tempList,
+                                   ui->rdbLogistica->isChecked());
+
+    updateConfusionMatrix();
+
+    processing(false);
 }

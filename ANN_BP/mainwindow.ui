@@ -56,6 +56,28 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Test</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <property name="leftMargin">
+           <number>1</number>
+          </property>
+          <property name="topMargin">
+           <number>1</number>
+          </property>
+          <property name="rightMargin">
+           <number>1</number>
+          </property>
+          <property name="bottomMargin">
+           <number>1</number>
+          </property>
+          <item>
+           <widget class="QTableWidget" name="tableTest"/>
+          </item>
+         </layout>
+        </widget>
         <widget class="QWidget" name="tabConfusion">
          <attribute name="title">
           <string>Confusion</string>
@@ -355,6 +377,13 @@
         </property>
         <property name="text">
          <string>Training</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRunTest">
+        <property name="text">
+         <string>Run Test</string>
         </property>
        </widget>
       </item>
