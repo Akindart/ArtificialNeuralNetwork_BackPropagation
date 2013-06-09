@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qtyInput = qtyHidden = qtyOutput = 0;
 
     connect(this, SIGNAL(tableUpdated()), ui->tableWidget, SLOT(resizeColumnsToContents()));
+    connect(this, SIGNAL(tableUpdated()), ui->tableConfusion, SLOT(resizeColumnsToContents()));
 }
 
 
@@ -39,7 +40,10 @@ void MainWindow::on_actionAbrir_arquivo_de_treinamento_triggered()
 void MainWindow::on_actionAbrir_arquivo_de_teste_triggered()
 {
 
-    QString testFileName = QFileDialog::getOpenFileName(this, tr("Arquivo de Teste"), "", "Text files (*.txt)");
+    QString testFileName = QFileDialog::getOpenFileName(this,
+                                                        tr("Arquivo de Teste"),
+                                                        "",
+                                                        "Text files (*.txt)");
 
     // execute test
 
@@ -83,7 +87,7 @@ void MainWindow::fileParse(QString fn)
 
     emit tableUpdated();
 
-    ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
+    // ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
 
     processing(false);
 
@@ -136,6 +140,7 @@ void MainWindow::normalize(int key, QStringList l)
 
 void MainWindow::updateTableNormalized()
 {
+    // "reset" the table
     ui->tableWidget->setRowCount(0);
 
     QHashIterator<int, QList<double> > i(*tempList);
@@ -159,6 +164,9 @@ void MainWindow::updateTableNormalized()
 
 void MainWindow::updateConfusionMatrix()
 {
+    // "reset" the table
+    ui->tableConfusion->setRowCount(0);
+
     // The Matrix
     QHash<int, QList<int> *> matrix = artificialNN->getConfusionMatrix()->getIndexes();
     // The Keys
@@ -177,18 +185,18 @@ void MainWindow::updateConfusionMatrix()
         i.next();
 
         int col = 0;
-        int row = ui->tableWidget->rowCount();
+        int row = ui->tableConfusion->rowCount();
 
-        ui->tableWidget->insertRow(row);
+        ui->tableConfusion->insertRow(row);
 
         QList<int> *matrix_values = i.value();
         foreach (int matrix_value, *matrix_values) {
             // add the line to table
             QTableWidgetItem *item = new QTableWidgetItem(QString::number(matrix_value));
-            ui->tableWidget->setItem(row, col++, item);
+            ui->tableConfusion->setItem(row, col++, item);
         }
     }
-
+    emit tableUpdated();
 }
 
 void MainWindow::calcLayers()
