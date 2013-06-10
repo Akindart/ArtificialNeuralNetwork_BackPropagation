@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qtyInput = qtyHidden = qtyOutput = 0;
 
+    lblProcessing = new QLabel("Processando. . .", this, Qt::ToolTip);
+    lblProcessing->setStyleSheet("font: 75 20pt \"Arial\";background-color: white;");
+
     connect(this, SIGNAL(tableUpdated()), ui->tableWidget, SLOT(resizeColumnsToContents()));
     connect(this, SIGNAL(tableUpdated()), ui->tableConfusion, SLOT(resizeColumnsToContents()));
     connect(this, SIGNAL(tableUpdated()), ui->tableTest, SLOT(resizeColumnsToContents()));
@@ -231,6 +234,33 @@ void MainWindow::normalizeTest(int key, QStringList l)
     testList->insert(key, list_temp);
 }
 
+void MainWindow::normalizeColumn(QHash<int, QList<double> > &tbl)
+{
+
+    /*
+    QHashIterator<int, QList<double> > i(tbl);
+
+    QList<double> list_column;
+    QList<double> list_temp;
+
+    for (int col = 0; col < tbl.values().length(); col++)
+        while (i.hasNext()) {
+            i.next();
+
+
+
+            row = ui->tableWidget->rowCount();
+            ui->tableWidget->insertRow(row);
+
+            foreach (double dv, i.value()) {
+                // add the line to table
+                QTableWidgetItem *item = new QTableWidgetItem(QString::number(dv));
+                ui->tableWidget->setItem(row, col++, item);
+            }
+        }
+        */
+}
+
 void MainWindow::updateTableNormalized()
 {
     // "reset" the table
@@ -402,13 +432,16 @@ void MainWindow::saveConfusionMatrix()
 void MainWindow::processing(bool b)
 {
     if (b) {
+        lblProcessing->show();
         ui->progressBar->setFormat("Processing. . .");
         ui->progressBar->setMaximum(0);
-
+        QApplication::processEvents();
     }
     else {
+        lblProcessing->close();
         ui->progressBar->setFormat("Done!");
         ui->progressBar->setMaximum(100);
+        QApplication::processEvents();
     }
 
     // Force the App to update the window and show the label
@@ -473,4 +506,9 @@ void MainWindow::on_btnRunTest_clicked()
     updateConfusionMatrix();
 
     processing(false);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    qtyHidden = ui->edtHiddenLayer->text().toInt();
 }

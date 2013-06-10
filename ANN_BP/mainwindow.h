@@ -36,6 +36,8 @@ private slots:
 
     void on_btnRunTest_clicked();
 
+    void on_pushButton_clicked();
+
 public slots:
     void updateConfusionMatrix();
 
@@ -50,11 +52,13 @@ private:
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
+    QLabel *lblProcessing;
 
     void fileParse(QString fn);
     void fileTestParse(QString fn);
     void normalize(int key, QStringList l);
     void normalizeTest(int key, QStringList l);
+    void normalizeColumn(QHash<int, QList<double> > &tbl);
     void updateTableNormalized();
     void updateTestTableNormalized();
 
