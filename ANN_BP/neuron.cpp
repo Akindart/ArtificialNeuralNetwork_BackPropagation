@@ -25,7 +25,7 @@ void Neuron::calcOutputValue(QList<Neuron *> *Neurons, bool logistic)
 
 double Neuron::calcTangHiperbolic(double n)
 {
-    return ((1 - exp(-2*n)) / (1 + exp(-2*n)));
+    return ((1.0 - (double)exp(-2*n)) / (1.0 + (double)exp(-2*n)));
 }
 
 double Neuron::calcDerivTangHiperbolic(double n)
@@ -35,12 +35,12 @@ double Neuron::calcDerivTangHiperbolic(double n)
 
 double Neuron::calcLogistic(double n)
 {
-    return (1 / (1 + exp(-n)));
+    return (double)(1.0 / (1.0 + (double)exp(-n)));
 }
 
 double Neuron::calcDerivLogistic(double n)
 {
-    return ( exp(-n) / ((1 + exp(-n)) * (1 + exp(-n))) );
+    return ( exp(-n) / ((1.0 + exp(-n)) * (1.0 + exp(-n))) );
 }
 
 void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
@@ -54,7 +54,7 @@ void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
-    qDebug()<<this->getId()<<" - "<<"Error: "<<this->getError()<<"\n";
+    //qDebug()<<this->getId()<<" - "<<"Error: "<<this->getError()<<"\n";
 
 }
 

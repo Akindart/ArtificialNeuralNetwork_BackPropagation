@@ -9,5 +9,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    //qDebug()<<exp(-2*0.74652);
+
     return a.exec();
 }

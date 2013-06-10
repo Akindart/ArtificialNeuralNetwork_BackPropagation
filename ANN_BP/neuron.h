@@ -6,6 +6,7 @@
 #include <QString>
 #include <cmath>
 #include <QDebug>
+#include <cmath>
 
 class Neuron : public QObject
 {

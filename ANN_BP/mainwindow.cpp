@@ -74,13 +74,15 @@ void MainWindow::fileParse(QString fn)
     ui->tableWidget->setColumnCount(first_line.length());
     ui->tableWidget->setHorizontalHeaderLabels(first_line);
 
+    this->stringsToNormalize = new QList< QStringList >();
+
     while (!in.atEnd()) {
         QStringList line_splited = in.readLine().split(",");
 
         int col = 0;
         int row = ui->tableWidget->rowCount();
 
-        normalize(row, line_splited);
+        this->stringsToNormalize->append(line_splited);
 
         ui->tableWidget->insertRow(row);
         foreach (QString s, line_splited) {
@@ -93,6 +95,9 @@ void MainWindow::fileParse(QString fn)
     emit tableUpdated();
 
     processing(false);
+
+    normalize();
+
 
     qDebug() << "Arquivo lido!";
 
@@ -131,13 +136,15 @@ void MainWindow::fileTestParse(QString fn)
     ui->tableTest->setColumnCount(first_line.length());
     ui->tableTest->setHorizontalHeaderLabels(first_line);
 
+    this->stringsToNormalize = new QList< QStringList >();
+
     while (!in.atEnd()) {
         QStringList line_splited = in.readLine().split(",");
 
         int col = 0;
         int row = ui->tableTest->rowCount();
 
-        normalizeTest(row, line_splited);
+         this->stringsToNormalize->append(line_splited);
 
         ui->tableTest->insertRow(row);
         foreach (QString s, line_splited) {
@@ -153,6 +160,8 @@ void MainWindow::fileTestParse(QString fn)
 
     processing(false);
 
+    normalizeTest();
+
     qDebug() << "Arquivo lido!";
 
     QFileInfo fi(file);
@@ -167,68 +176,109 @@ void MainWindow::fileTestParse(QString fn)
     updateTestTableNormalized();
 }
 
-void MainWindow::normalize(int key, QStringList l)
+void MainWindow::normalize()
 {
     /**
         X1, X2, X3, X4, X5, X6, classe
         1,  19, 35, 28, 17, 4,  1
     **/
 
-    QList<double> list_double;
-    QList<double> list_temp;
+    QList<double> maxs;
+    QList<double> mins;
 
-    // Min - Max of Line (l)
-    for (int i = 0; i < l.size() - 1; i++)
-        list_double.append(l.at(i).toDouble());
+    for(int i=0; i<(this->stringsToNormalize->first().size()-1); i++){
 
-    qSort(list_double.begin(), list_double.end());
 
-    double line_min = list_double.first();
-    double line_max = list_double.last();
+        maxs.append(this->stringsToNormalize->first().at(i).toDouble());
+        mins.append(this->stringsToNormalize->first().at(i).toDouble());
 
-    // Update all of them...
-    for (int i = 0; i < l.size() - 1; i++) {
-        double v = l.at(i).toDouble();
-        double v_new = (v - line_min) / (line_max - line_min);
-        list_temp.append(v_new);
     }
 
-    // Last element is the CLASS
-    list_temp.append(l.last().toDouble());
+    for(int i=0; i<this->stringsToNormalize->size(); i++){
 
-    tempList->insert(key, list_temp);
+
+        for(int j=0; j<(this->stringsToNormalize->at(i).size()-1); j++){
+
+            if(maxs.at(j) < this->stringsToNormalize->at(i).at(j).toDouble())
+                maxs.replace(j, this->stringsToNormalize->at(i).at(j).toDouble());
+
+            else if(mins.at(j) > this->stringsToNormalize->at(i).at(j).toDouble())
+                    mins.replace(j, this->stringsToNormalize->at(i).at(j).toDouble());
+
+        }
+
+    }
+
+    for(int i=0; i<this->stringsToNormalize->size(); i++){
+
+        QList<double> temp_List;
+
+        for(int j=0; j<(this->stringsToNormalize->at(i).size()-1); j++){
+
+            double newValue = (this->stringsToNormalize->at(i).at(j).toDouble() - mins.at(j))/(maxs.at(j)-mins.at(j));
+            temp_List.append(newValue);
+
+        }
+
+        temp_List.append(this->stringsToNormalize->at(i).last().toDouble());
+
+        this->tempList->insert(i, temp_List);
+
+    }
+
 }
 
-void MainWindow::normalizeTest(int key, QStringList l)
+void MainWindow::normalizeTest()
 {
     /**
         X1, X2, X3, X4, X5, X6, classe
         1,  19, 35, 28, 17, 4,  1
     **/
 
-    QList<double> list_double;
-    QList<double> list_temp;
+    QList<double> maxs;
+    QList<double> mins;
 
-    // Min - Max of Line (l)
-    for (int i = 0; i < l.size() - 1; i++)
-        list_double.append(l.at(i).toDouble());
+    for(int i=0; i<(this->stringsToNormalize->first().size()-1); i++){
 
-    qSort(list_double.begin(), list_double.end());
 
-    double line_min = list_double.first();
-    double line_max = list_double.last();
+        maxs.append(this->stringsToNormalize->first().at(i).toDouble());
+        mins.append(this->stringsToNormalize->first().at(i).toDouble());
 
-    // Update all of them...
-    for (int i = 0; i < l.size() - 1; i++) {
-        double v = l.at(i).toDouble();
-        double v_new = (v - line_min) / (line_max - line_min);
-        list_temp.append(v_new);
     }
 
-    // Last element is the CLASS
-    list_temp.append(l.last().toDouble());
+    for(int i=0; i<this->stringsToNormalize->size(); i++){
 
-    testList->insert(key, list_temp);
+
+        for(int j=0; j<(this->stringsToNormalize->at(i).size()-1); j++){
+
+            if(maxs.at(j) < this->stringsToNormalize->at(i).at(j).toDouble())
+                maxs.replace(j, this->stringsToNormalize->at(i).at(j).toDouble());
+
+            else if(mins.at(j) > this->stringsToNormalize->at(i).at(j).toDouble())
+                    mins.replace(j, this->stringsToNormalize->at(i).at(j).toDouble());
+
+        }
+
+    }
+
+    for(int i=0; i<this->stringsToNormalize->size(); i++){
+
+        QList<double> temp_List;
+
+        for(int j=0; j<(this->stringsToNormalize->at(i).size()-1); j++){
+
+            double newValue = (this->stringsToNormalize->at(i).at(j).toDouble() - mins.at(j))/(maxs.at(j)-mins.at(j));
+            temp_List.append(newValue);
+            qDebug()<<"Valor de teste normalizado'"<<temp_List.last()<<"\n";
+
+        }
+
+        temp_List.append(this->stringsToNormalize->at(i).last().toDouble());
+
+        this->testList->insert(i, temp_List);
+
+    }
+
 }
 
 void MainWindow::updateTableNormalized()

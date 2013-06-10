@@ -50,11 +50,12 @@ private:
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
+    QList< QStringList > *stringsToNormalize;
 
     void fileParse(QString fn);
     void fileTestParse(QString fn);
-    void normalize(int key, QStringList l);
-    void normalizeTest(int key, QStringList l);
+    void normalize();
+    void normalizeTest();
     void updateTableNormalized();
     void updateTestTableNormalized();
 
