@@ -222,6 +222,8 @@ void MainWindow::normalize()
 
         temp_List.append(this->stringsToNormalize->at(i).last().toDouble());
 
+        //qDebug()<<temp_List.last();
+
         this->tempList->insert(i, temp_List);
 
     }

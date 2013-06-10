@@ -48,9 +48,9 @@ void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
     double deriv;
 
     if(logistic)
-        deriv = this->calcDerivLogistic(this->getNet());
+        deriv = (expectedOutput * (1-expectedOutput));
 
-    else deriv = this->calcDerivTangHiperbolic(this->getNet());
+    else deriv = (1 - (expectedOutput*expectedOutput));
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
@@ -89,8 +89,7 @@ void Neuron::calcNewWeight(double N, QList<Neuron *> *Neurons)
 
     for(int i=0; i<this->getWeights()->size(); i++){
 
-        this->getWeights()->insert(i, N*this->getError()*(Neurons->at(i)->getOutput()));
-        this->getWeights()->removeAt(i+1);
+        this->getWeights()->replace(i, N*this->getError()*(Neurons->at(i)->getOutput()));
 
     }
 
