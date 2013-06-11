@@ -48,9 +48,9 @@ void Neuron::calcErrorOutputLayer(double expectedOutput, bool logistic)
     double deriv;
 
     if(logistic)
-        deriv = (expectedOutput * (1-expectedOutput));
+        deriv = this->calcDerivLogistic(this->getNet());
 
-    else deriv = (1 - (expectedOutput*expectedOutput));
+    else deriv = this->calcDerivTangHiperbolic(this->getNet());
 
     this->setError(deriv*(expectedOutput - this->getOutput()));
 
