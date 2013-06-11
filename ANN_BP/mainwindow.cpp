@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qtyInput = qtyHidden = qtyOutput = 0;
 
+    lblProcessing = new QLabel("Processando. . .", this, Qt::ToolTip);
+    lblProcessing->setStyleSheet("font: 75 20pt \"Arial\";background-color: white;");
+
     connect(this, SIGNAL(tableUpdated()), ui->tableWidget, SLOT(resizeColumnsToContents()));
     connect(this, SIGNAL(tableUpdated()), ui->tableConfusion, SLOT(resizeColumnsToContents()));
     connect(this, SIGNAL(tableUpdated()), ui->tableTest, SLOT(resizeColumnsToContents()));
@@ -156,8 +159,6 @@ void MainWindow::fileTestParse(QString fn)
 
     emit tableUpdated();
 
-    // ui->tableWidget->item(2, 0)->setBackgroundColor(Qt::cyan);
-
     processing(false);
 
     normalizeTest();
@@ -227,7 +228,6 @@ void MainWindow::normalize()
         this->tempList->insert(i, temp_List);
 
     }
-
 }
 
 void MainWindow::normalizeTest()
@@ -454,13 +454,16 @@ void MainWindow::saveConfusionMatrix()
 void MainWindow::processing(bool b)
 {
     if (b) {
+        lblProcessing->show();
         ui->progressBar->setFormat("Processing. . .");
         ui->progressBar->setMaximum(0);
-
+        QApplication::processEvents();
     }
     else {
+        lblProcessing->close();
         ui->progressBar->setFormat("Done!");
         ui->progressBar->setMaximum(100);
+        QApplication::processEvents();
     }
 
     // Force the App to update the window and show the label
@@ -489,15 +492,11 @@ void MainWindow::on_btnCreateNet_clicked()
     ui->grpFunction->setEnabled(true);
     ui->grpStopCriteria->setEnabled(true);
     ui->btnTraining->setEnabled(true);
+    ui->grpChangeWeights->setEnabled(true);
 }
 
 void MainWindow::on_btnTraining_clicked()
 {
-    /**
-    exeANNBPLoopTraining(QHash<int, QList<double> > *tempList,
-                         bool logistic, bool error,
-                         double stopError, int qtyIterations)
-    **/
     qDebug() << ui->rdbLogistica->isChecked() << ", " <<
                 ui->rdbErro->isChecked() << ", " <<
                 ui->spinErro->text().toDouble() << ", " <<
@@ -513,6 +512,8 @@ void MainWindow::on_btnTraining_clicked()
 
     processing(false);
 
+    ui->btnRunTest->setEnabled(true);
+
 }
 
 void MainWindow::on_btnRunTest_clicked()
@@ -521,8 +522,89 @@ void MainWindow::on_btnRunTest_clicked()
 
     artificialNN->exeANNBPLoopTest(testList,
                                    ui->rdbLogistica->isChecked());
-
     updateConfusionMatrix();
 
     processing(false);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    qtyHidden = ui->edtHiddenLayer->text().toInt();
+}
+
+void MainWindow::on_cbbNeuronio_highlighted(const QString &arg1)
+{
+    QList<Neuron *> *list_neuron = NULL;
+
+    ui->cbbPeso->clear();
+
+    if (ui->cbbLayer->currentText() == "Input")
+        list_neuron = artificialNN->getInputLayer();
+
+    if (ui->cbbLayer->currentText() == "Hidden")
+        list_neuron = artificialNN->getHiddenLayer();
+
+    if (ui->cbbLayer->currentText() == "Output")
+        list_neuron = artificialNN->getOutputLayer();
+
+    for (int i = 1; i <= list_neuron->length(); i++)
+        ui->cbbPeso->addItem(QString::number(i));
+}
+
+void MainWindow::on_cbbLayer_highlighted(const QString &arg1)
+{
+    ui->cbbNeuronio->clear();
+
+    if (arg1 == "Input")
+        for (int i = 1; i <= qtyInput; i++) {
+            ui->cbbNeuronio->addItem(QString::number(i));
+        }
+
+    if (arg1 == "Hidden")
+        for (int i = 1; i <= qtyHidden; i++) {
+            ui->cbbNeuronio->addItem(QString::number(i));
+        }
+
+    if (arg1 == "Output")
+        for (int i = 1; i <= qtyOutput; i++) {
+            ui->cbbNeuronio->addItem(QString::number(i));
+        }
+}
+
+void MainWindow::on_cbbPeso_highlighted(const QString &arg1)
+{
+    QList<Neuron *> *list_neuron = NULL;
+
+    if (ui->cbbLayer->currentText() == "Input")
+        list_neuron = artificialNN->getInputLayer();
+
+    if (ui->cbbLayer->currentText() == "Hidden")
+        list_neuron = artificialNN->getHiddenLayer();
+
+    if (ui->cbbLayer->currentText() == "Output")
+        list_neuron = artificialNN->getOutputLayer();
+
+    double weight = list_neuron->at(ui->cbbNeuronio->currentIndex())->getWeights()->at(ui->cbbPeso->currentIndex());
+
+    ui->edtWeight->setText(QString::number(weight));
+}
+
+void MainWindow::on_btnSetWeight_clicked()
+{
+    QList<Neuron *> *list_neuron = NULL;
+
+    if (ui->cbbLayer->currentText() == "Input")
+        list_neuron = artificialNN->getInputLayer();
+
+    if (ui->cbbLayer->currentText() == "Hidden")
+        list_neuron = artificialNN->getHiddenLayer();
+
+    if (ui->cbbLayer->currentText() == "Output")
+        list_neuron = artificialNN->getOutputLayer();
+
+    for (int i = 1; i <= list_neuron->length(); i++)
+        ui->cbbPeso->addItem(QString::number(i));
+
+    list_neuron->at(ui->cbbNeuronio->currentIndex())->getWeights()->replace(ui->cbbPeso->currentIndex()-1,
+                                                                            ui->edtWeight->text().toDouble());
 }

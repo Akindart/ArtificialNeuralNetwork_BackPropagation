@@ -36,6 +36,16 @@ private slots:
 
     void on_btnRunTest_clicked();
 
+    void on_pushButton_clicked();
+
+    void on_cbbNeuronio_highlighted(const QString &arg1);
+
+    void on_cbbLayer_highlighted(const QString &arg1);
+
+    void on_cbbPeso_highlighted(const QString &arg1);
+
+    void on_btnSetWeight_clicked();
+
 public slots:
     void updateConfusionMatrix();
 
@@ -50,6 +60,7 @@ private:
     int qtyHidden;
     int qtyOutput;
     ANN_BP *artificialNN;
+    QLabel *lblProcessing;
     QList< QStringList > *stringsToNormalize;
 
     void fileParse(QString fn);
