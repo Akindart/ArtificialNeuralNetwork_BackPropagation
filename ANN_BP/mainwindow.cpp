@@ -538,9 +538,6 @@ void MainWindow::on_cbbNeuronio_highlighted(const QString &arg1)
 
     ui->cbbPeso->clear();
 
-    if (ui->cbbLayer->currentText() == "Input")
-        list_neuron = artificialNN->getInputLayer();
-
     if (ui->cbbLayer->currentText() == "Hidden")
         list_neuron = artificialNN->getHiddenLayer();
 
@@ -555,18 +552,13 @@ void MainWindow::on_cbbLayer_highlighted(const QString &arg1)
 {
     ui->cbbNeuronio->clear();
 
-    if (arg1 == "Input")
+    if (arg1 == "Hidden")
         for (int i = 1; i <= qtyInput; i++) {
             ui->cbbNeuronio->addItem(QString::number(i));
         }
 
-    if (arg1 == "Hidden")
-        for (int i = 1; i <= qtyHidden; i++) {
-            ui->cbbNeuronio->addItem(QString::number(i));
-        }
-
     if (arg1 == "Output")
-        for (int i = 1; i <= qtyOutput; i++) {
+        for (int i = 1; i <= qtyHidden; i++) {
             ui->cbbNeuronio->addItem(QString::number(i));
         }
 }
@@ -574,9 +566,6 @@ void MainWindow::on_cbbLayer_highlighted(const QString &arg1)
 void MainWindow::on_cbbPeso_highlighted(const QString &arg1)
 {
     QList<Neuron *> *list_neuron = NULL;
-
-    if (ui->cbbLayer->currentText() == "Input")
-        list_neuron = artificialNN->getInputLayer();
 
     if (ui->cbbLayer->currentText() == "Hidden")
         list_neuron = artificialNN->getHiddenLayer();
@@ -592,9 +581,6 @@ void MainWindow::on_cbbPeso_highlighted(const QString &arg1)
 void MainWindow::on_btnSetWeight_clicked()
 {
     QList<Neuron *> *list_neuron = NULL;
-
-    if (ui->cbbLayer->currentText() == "Input")
-        list_neuron = artificialNN->getInputLayer();
 
     if (ui->cbbLayer->currentText() == "Hidden")
         list_neuron = artificialNN->getHiddenLayer();
