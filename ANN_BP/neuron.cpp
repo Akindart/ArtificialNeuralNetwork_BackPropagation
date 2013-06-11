@@ -89,7 +89,7 @@ void Neuron::calcNewWeight(double N, QList<Neuron *> *Neurons)
 
     for(int i=0; i<this->getWeights()->size(); i++){
 
-        this->getWeights()->replace(i, N*this->getError()*(Neurons->at(i)->getOutput()));
+        this->getWeights()->replace(i, this->getWeights()->at(i) + N*this->getError()*(Neurons->at(i)->getOutput()));
 
     }
 
