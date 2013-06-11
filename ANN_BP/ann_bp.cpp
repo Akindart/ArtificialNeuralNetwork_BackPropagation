@@ -24,7 +24,7 @@ ANN_BP::ANN_BP(QObject *parent, int qtyInputLayer, int qtyHiddenLayer, int qtyOu
     srand((unsigned)time(NULL));
 
     Neuron *tempNeuron;
-    this->N = 0.01;
+    this->N = 0.00002;
 
     for(int i=0; i<qtyInputLayer; i++){
 
@@ -106,7 +106,7 @@ void ANN_BP::exeANNBPLoopTest(QHash<int, QList<double> > *tempList, bool logisti
 
     foreach(QList<double> inputString, *tempList){
 
-        exeANNBP(inputString, true, logistic, false, 0.0);
+        exeANNBP(inputString, false, logistic, false, 0.0);
 
     }
 
@@ -148,7 +148,7 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
 
         }
 
-        //qDebug()<<"Net Error"<<this->calcANNBPError(tempError)<<"\n";
+        qDebug()<<"Net Error"<<this->calcANNBPError(tempError)<<"\n";
 
         if(error && (this->calcANNBPError(tempError) < stopError)) return 1;
 
@@ -169,8 +169,7 @@ int ANN_BP::exeANNBP(QList<double> inputValues, bool trainning, bool logistic, b
 
     }
 
-    //else
-        this->confMatrix->addMatrix(outputs, howOutputShouldBe);
+    else this->confMatrix->addMatrix(outputs, howOutputShouldBe);
 
 
     emit matrixUpdated();
