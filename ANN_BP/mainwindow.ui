@@ -228,11 +228,6 @@
               <widget class="QComboBox" name="cbbLayer">
                <item>
                 <property name="text">
-                 <string>Input</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
                  <string>Hidden</string>
                 </property>
                </item>
